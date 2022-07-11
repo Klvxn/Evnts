@@ -1,0 +1,8 @@
+__pycache__
+migrations
+*.pyc
+*.sqlite3
+/static/images
+.coverage
+.pytest_cache
+media

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<h2> Evnt: {{event.name}} </h2> 
+{% endblock title %}
+
+
+{% block content %}
+<div class="event-detail">
+    <div id="alert">
+    {% if messages %}
+    <div class="alert alert-success w-75">
+            {% for messages in messages %}
+                {{messages}} <a href="" class="close">&times;</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div id="event">
+        <p>
+            {% if tags %}
+                Tags:
+                {% for tag in tags %}
+                    <a href="{% url 'events:event-tag' tag.slug %}"> {{ tag }}</a>
+                {% endfor %}
+            {% endif %}
+        </p>
+
+        Category: <a href="{{event.category.get_absolute_url}}"> {{event.category}} </a> <br>
+        {% if event.image %} <img src="{{event.image.url}}" alt=""> {% endif %}  <br>
+        <p> {{event.description}} </p>
+        {% if event.host %} Host: {{event.host|title}} <br> {% endif %}
+        {% if event.special_guests %} Special guests: {{event.special_guests}} <br> {% endif %} 
+        Date: {{event.date}}  <br> {{event.id}} <br>
+        Venue: {{event.venue}}  <br>
+        Ticket Price: {% if event.ticket_price %} ${{event.ticket_price}} {% else %} Free {% endif %} <br>
+
+        <form id="hmm" action="" method="post" class="mt-5" hx-trigger="click" hx-post="." hx-target="#hmm">
+            {% csrf_token %}
+            <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Add">
+        </form>
+
+        {% if user.is_superuser or user == event.user %}
+            <p class="event-buttons mt-5">
+                <a class="btn btn-outline-primary px-2" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
+                <a class="btn btn-outline-danger px-2" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
+            </p>
+        {% endif %}
+    </div>
+
+    <hr>
+    <div class="cs mb-5 mt-5">
+        {% if comment_set %}
+            <h3> Comment Section </h3>
+            {% for comments in comment_set %} 
+                <p class="comments p-3">
+                    <span style="font-weight:bold;"> {{comments.username}}: </span> <br>
+                    <span> {{comments.comment}} <br> <i>  {{comments.date_added|timesince}} ago </i> </span>
+                </p>
+            {% endfor %} 
+            <hr>
+        {% endif %}
+    </div>
+
+    <h3> Add Comment</h3>
+    <form action="" class="cs" method="post">
+       {% csrf_token %}
+        <p> <label for="username">Username: </label> <br>
+            <input id="username" name="username" required type="text"> </p>
+        
+        <p> <label for="comment">Comment: </label> <br>
+            <textarea id="comment" name="comment" required> </textarea> </p>
+        <button class="btn btn-outline-success py-1 px-2 mp-3" type="submit"> Post comment </button>
+    </form>
+
+    {% if related_events %}
+        <hr>
+        <div class="related mt-5">
+           <h3> Related Events </h3>
+            <div class="events mt-2">
+                {% for events in related_events %}
+                    <ul>
+                        <li> {% if events.image %} <img src="{{events.image.url}}" alt=""> <br> {% endif %}
+                             <a href="{{ events.get_absolute_url }}"> > {{ events }}</a> <br> </li>
+                    </ul>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

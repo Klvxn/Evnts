@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<h2 id="title"> Your Profile </h2>
+{% endblock title %}    
+
+
+{% block content %}
+<div class="user">
+    {% if messages %}
+        <div class="success-messages text-success">
+            {% for messages in messages %}
+                {{messages}} <a href="" style="color:green;" class="close">x</a>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if user.image %}
+        <figure>
+            <img src="{{user.image.url}}" alt="">
+        </figure> 
+    {% else %}
+        <figure>
+            <img src="/static/images/anon.png" alt="">
+        </figure>
+    {% endif %} {{user.username|title}} <hr class="mb-3">
+    Username: {{user.username}} <br>
+    Email: {{user.email}} <br>
+    First Name: {{user.first_name}} <br>
+    Last Name: {{user.last_name}} <br>
+    Gender: {{user.gender}} <br>
+    Date of Birth:
+        {% if user.date_of_birth %}
+            {{user.date_of_birth}}
+        {% else %}
+            Not set
+        {% endif %}  <br>
+
+    <div class="user-buttons mt-5">
+        <a href="{% url 'accounts:edit-profile' user.username %}" class="btn btn-outline-secondary py-1" >Edit profile</a>
+        <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-warning py-1">Change password</a>
+        <a href="{% url 'accounts:delete-account' user.username  %}" class="btn btn-outline-danger py-1">Delete account</a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %} {% endblock footer %}
+

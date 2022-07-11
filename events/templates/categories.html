@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<h2> Categories </h2> 
+{% endblock title %}
+
+
+{% block content %} 
+<div class="container-1 mt-0"> 
+    <p> These are the categories of evnts. </p>
+    {% for category in categories %}
+        <a href="{{ category.get_absolute_url }}"> {{ category }} </a> <br>
+    {% endfor %}
+</div> 
+{% endblock content %}
+
+
+{% block footer %} {% endblock footer %}

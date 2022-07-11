@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<h1> Welcome to EVNT-MNGR </h1>
+{% endblock title %}
+
+
+{% block search %}
+{% endblock search %}
+
+
+{% block content  %}
+<div class="container">
+    <h2>The best place to keep track of all your evnts.</h2>
+    <div>
+        <figure> 
+            <img src="/static/images/Christmas party2.jpg" title="Concert" alt="" class="mx-5">
+            <img src="/static/images/exhibition2.jpg" title="Festival" alt="" class="mx-5">  <br> 
+        </figure>
+        
+        <h2> All evnts are arranged according to categories. </h2> 
+
+        <figure>
+            <figcaption>Concerts</figcaption>
+            <img src="/static/images/pexels-wendy-wei-1540406.jpg" title="Concert" alt=""> 
+        </figure>
+        
+        <figure>
+            <figcaption>Weddings</figcaption>
+            <img src="/static/images/weddding.jpg" title="Wedding" alt=""> 
+        </figure>
+
+        <figure>
+            <figcaption>Conference</figcaption>
+            <img src="/static/images/conference3.jpg" alt="">
+        </figure>
+
+        <h2> You can keep your evnts private, away the other users <i class="fa fa-lock"></i> </h2>
+
+        <figure>
+            <img src="/static/images/party.jpg" alt="">
+        </figure>
+        <h3> This is the best place to know about public events and also keep track of your own evnts.</h3>
+        <br>
+        <span class="mt-lg-5">
+            <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary mx-5 p-2"> Get started </a>
+            <a href="{% url 'events:home' %}" class="btn btn-outline-primary mx-5 p-2"> Browse evnts</a>
+        </span>
+    </div>
+</div>
+{% endblock content  %}

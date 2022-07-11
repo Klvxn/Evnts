@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+<h2> Edit evnt </h2> 
+{% endblock title %}
+
+
+{% block content %}
+{% if form.errors %}
+    <ol>
+        {% for error in form.errors %}
+        <li><strong>{{ error }}xxy </strong> </li>
+        {% endfor %}
+    </ol>
+{% endif %}
+{% if messages %}
+    <div class="error-messages bg-danger">
+        {% for messages in messages %}
+            {{ messages }} <a href="" class="close">x</a>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<form enctype="multipart/form-data" method="post" action="" class="form-group">
+    {% csrf_token %}
+    {{ form|crispy }} <br>
+    <input type="submit" value="Save changes" class="btn btn-primary"/>
+</form>
+
+{% endblock %}

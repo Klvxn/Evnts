@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+<h2 id="title" > Register </h2>
+{% endblock title %}
+
+
+{% block search %}
+{% endblock search %}
+
+
+{% block content %}
+{% if messages %}
+    <div class="error-messages bg-danger">
+        {% for messages in messages %}
+            {{messages}} <a href="" class="close">x</a>
+        {% endfor %}
+    </div>
+{% endif %}  
+<div style="text-align: center; font-size:1.5rem;"> Fill the form to register </div>
+<form enctype="multipart/form-data" method="post" action="" class="form-group">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <p> <input type="submit" value="Create account" class="btn btn-outline-success mt-5"/> </p> <hr>
+    <p class="mx-0"> Already have an account? <a href="{% url 'accounts:login' %}"> &raquo; Login</a></p>
+</form>
+{% endblock content %}
+
+
+{% block footer %} {% endblock %}
