@@ -4,7 +4,7 @@
 
 
 {% block title %}
-<h2 id="title" > Register </h2>
+<h2> Register </h2>
 {% endblock title %}
 
 
@@ -16,11 +16,11 @@
 {% if messages %}
     <div class="error-messages bg-danger">
         {% for messages in messages %}
-            {{messages}} <a href="" class="close">x</a>
+            {{ messages }} <a href="" class="close">x</a>
         {% endfor %}
     </div>
-{% endif %}  
-<div style="text-align: center; font-size:1.5rem;"> Fill the form to register </div>
+{% endif %}
+
 <form enctype="multipart/form-data" method="post" action="" class="form-group">
     {% csrf_token %}
     {% bootstrap_form form %}

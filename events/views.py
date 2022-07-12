@@ -68,7 +68,7 @@ class EventsListView(View):
     template_name = "homepage.html"
 
     def get(self, request):
-        events = Event.public.all().order_by("date")
+        events = Event.public.all().order_by("date_posted")
         context = {"events": events}
         return render(request, self.template_name, context)
 
@@ -82,9 +82,7 @@ class EventDetailView(View):
         event = get_event(slug)
         tags = event.tags.all()
         related_events = (
-            Event.objects.filter(tags__id__in=tags)
-            .exclude(id=event.id)
-            .order_by("date").distinct()
+            Event.objects.filter(tags__id__in=tags).exclude(id=event.id).order_by("date_posted").distinct()
         )
         form = self.form_class()
         comment_set = event.comments.all()
@@ -168,10 +166,7 @@ class PrivateEventDetailView(LoginRequiredMixin, View):
             event = Event.private.get(user=request.user, name=event)
             tags = event.tags.all()
             related_events =(
-                Event.objects.filter(tags__id__in=tags)
-                .exclude(id=event.id)
-                .order_by("date")
-                .distinct()
+                Event.objects.filter(tags__id__in=tags).exclude(id=event.id).order_by("date_posted").distinct()
             )
         else:
             return HttpResponseForbidden()
@@ -205,7 +200,8 @@ class AddEventView(LoginRequiredMixin, View):
             return redirect(event)
         else:
             messages.error(request, "Your evnt was not posted. Try again.")
-        return render(request, self.template_name, context={"form": form})
+        context = {"form": form}
+        return render(request, self.template_name, context)
 
 
 class EditEventView(LoginRequiredMixin, View):
@@ -237,9 +233,8 @@ class EditEventView(LoginRequiredMixin, View):
                 return redirect(edit)
             else:
                 messages.error(request, "Error while updating evnt.")
-            return render(
-                request, self.template_name, context={"form": form, "event": event}
-            )
+            context = {"form": form, "event": event}
+            return render(request, self.template_name, context)
         else:
             return HttpResponseForbidden()
 

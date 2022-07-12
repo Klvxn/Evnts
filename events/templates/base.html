@@ -27,7 +27,7 @@
     <body>
         <nav class="navbar navbar-expand-md bg-primary">
           
-            <a class="navbar-brand px-5" href="{% url 'events:home'%}"> EVNT-MNGR </a>
+            <a class="navbar-brand px-5" href="{% url 'events:home'%}"> EVNTS </a>
 
             <button aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler bg-primary"
                     data-target="#navbarCollapse" data-toggle="collapse" type="button">
@@ -53,12 +53,12 @@
                             <div class="dropdown"> 
                                 <a class="nav-link mx-auto dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" href=""
                                    id="userMenu" type="button">
-                                   {% if user.image %}
+                                    {% if user.image %}
                                         <img src="{{user.image.url}}" alt="">
                                     {% else %}
                                         <img src="/static/images/anon.png" alt="">
                                     {% endif %}
-                                     </a>
+                                </a>
                                 <ul class="dropdown-menu" aria-labelledby="userMenu">
                                     <li><a class="dropdown-item" href="{{user.get_absolute_url}}" >View profile </a></li>
                                     <div class="dropdown-divider"></div>
@@ -90,7 +90,7 @@
         </form>
         {% endblock %}
         <main>
-            <div class="container-fluid">
+            <div class="container-fluid p-4">
                 {% block title %} {% endblock %}
         
                 {% block content %}  {% endblock %}

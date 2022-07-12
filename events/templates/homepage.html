@@ -1,37 +1,49 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
 <h2> Evnts </h2>
 {% endblock title %}
 
 
 {% block content %}
-<section>
-    {% if messages %}
-        <div class="alert alert-success">
-            {% for messages in messages %}
-                {{messages}} <a href="" style="color:green;" class="close">x</a>
-            {% endfor %}
-        </div>
-    {% endif %}
+{% if messages %}
+    <div class="alert alert-success w-75 m-5" role="alert">
+        {% for message in messages %}
+            <span> {{ message }} </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="container-fluid">
     {% for event in events %}
-        <div class="events-container">
+        <div class="p-5 mb-5 border">
+            <div id="posted-by" class="mb-5">
+                {% if event.user.image %}
+                    <img src="{{user.image.url}}" alt="My Avi" class="mb-0">
+                {% else %}
+                    <img src="/static/images/anon.png" alt="anon" class="mb-0">
+                {% endif %}
+                <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
+                <span class="mx-3"> - {{ event.date_posted|timesince }} ago</span>
+            </div>
+
             {% if event.past_event %}
                 <p class="badge bg-secondary" id="badge"> Past evnt </p> 
             {% endif %}
-            {% if event.image %}
-                <div>
-                    <img src="{{event.image.url}}" alt=""> 
-                </div>
-            {% endif %} <br>
-            <a href="{{event.get_absolute_url}}"> {{event}} </a>
-            <!--<span class="lol"> {{event.description|truncatechars:'150'}} </span> <br> --> <br>
+            
             <div>
-                <p>  {% if event.special_guests %} Featuring: {{event.special_guests}} <br> {% endif %} 
-                    Date: {{event.date.date}} <br>
-                    Venue: {{event.venue}} </p>
+                {% if event.image %}
+                  <img src="{{event.image.url}}" alt=""> 
+                {% endif %} 
+                <br>
+                <a href="{{event.get_absolute_url}}"> {{event}} </a>
+                <p> {{event.description|truncatewords:20}} </p> 
             </div>
-        </div>  
+        </div>
     {% endfor %}
-</section>
+</div> 
 {% endblock content %}

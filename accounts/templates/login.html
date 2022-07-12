@@ -2,9 +2,8 @@
 {% load crispy_forms_tags %}
 
 
-
 {% block title %}
-<h2 id="title"> Login </h2> 
+<h2> Login </h2> 
 {% endblock title %}
 
 
@@ -15,12 +14,11 @@
 {% block content %}
 <form method="post" action="" class="form-group">
     {% csrf_token %}
-    {{form|crispy}}
+    {{ form|crispy }}
     <p> <a href="">Forgotten password? </a></p>
     <p> <input type="submit" value="Login" class="btn btn-outline-success mt-5"> </p> <hr>
-    <p class="mx-0"> Don't have an account?<a href="{% url 'accounts:register' %}"> &raquo; Register </a> </p>
+    <p class="mx-0"> Don't have an account? <a href="{% url 'accounts:register' %}"> &raquo; Register </a> </p>
 </form>
-
 {% endblock content %} 
 
 

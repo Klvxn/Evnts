@@ -3,17 +3,21 @@ body {
     padding: 0;
 }
 
-main{
-    margin-left: 10%;
-    margin-right: 10%;
+:root {
+    --font-size: 1.5rem;
 }
 
-a{
-    text-decoration: none;
+main{
+    margin: 0 5%;
 }
+
 
 h1, h2, h3, h4, h5{
     font-family: Muli, sans-serif;
+}
+
+a {
+    text-decoration: none;
 }
 
 a.btn{
@@ -40,7 +44,6 @@ a.btn{
 /* Nav bar  */
 .navbar{
     padding: 5px;
-    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 nav a.navbar-brand{
@@ -83,7 +86,7 @@ div.dropdown li a{
 
 #userMenu img {
     width: 3rem;
-    height: 3.5rem;
+    height: 3rem;
     border-radius: 50%;
 }
 
@@ -91,11 +94,7 @@ div.dropdown li a{
 /*  Page title */
 h2 {
     font-family: sans-serif;
-    border-bottom: 1px solid gainsboro;
-    padding: 5px 0; 
-    text-align: left;
-    margin: 0 auto;
-    margin-bottom: 1.5rem;
+    margin-bottom: 5rem;
 }
 
 #searchbar {
@@ -110,131 +109,82 @@ h2 {
 
 
 /* Index page. */
-.container {
+div.index {
     margin-top: 3rem;
     text-align: center;
 }
 
-img {
-    border-radius: 5%;
-    height: 18rem;
+div.index img {
+    height: 20rem;
     width: 20rem;
-    margin-top:0;
-    margin-bottom:0;
-    padding: 0;
 }
 
 figure {
     margin: 4rem;
 }
 
-figcaption{
-    font-size: 1.5rem;
+figcaption {
+    font-size: var(--font-size);
 }
 
 
 /* Events home page. */
-.events-container {
-    border-bottom: 0.1rem solid dodgerblue ; 
-    margin-left: 10% ;
-    margin-right: 10% ;
-    padding:  40px;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-color: white;
+#posted-by a {
+    font-size: var(--font-size);
 }
 
-.events-container a{
-    font-size: 2rem;
-    color: black;
+#posted-by img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
 }
 
-.events-container p {
-    font-size: 1.5rem;
-    color: cadetblue;
+.container-fluid a {
+    font-size: var(--font-size);
+}
+
+.container-fluid p {
+    font-size: 1.3rem;
 }
 
 #badge {
-    font-size: 1rem;
+    font-size: .8rem;
     color: white;
     float: right;
 }
 
-.events-container a.btn{
-    font-size: 1.2rem;
-}
-
-.events-container a.btn:hover{
-    color: white;
-    text-decoration:none;
-}
-
-.events-container a:hover{
-    color: #394ae8;
-    font-weight: normal;
-    text-decoration:none;
-}
-
-.events-container img{
+.container-fluid img {
     border-radius: 4%;
-    height: 12rem;
+    height: 10rem;
     width: 20rem;
-    margin-bottom: 1rem;
-}
-
-
-/* messages */
-.success-messages  {
-    font-size: x-large;
-    background-color: lightgreen ;
-    width: 100%;
-    text-align: left;
-    padding: 1rem ;
-    margin-bottom: 3rem;
-}
-
-.error-messages {
-    color:rgb(246, 192, 192);
-    font-size: x-large;
-    width: 100%;
-    text-align: left;
-    padding: 1rem ;
-    margin-bottom: 3rem;
-
-}
-
-.error-messages a{
-    float: right;
-    color: white;
+    margin-bottom: 2rem;
 }
 
 
 /* Events detail page. */
-#event a{
-    font-size: 1.5rem;
+.event-detail{
+    font-size: var(--font-size);
+    margin: 0 auto;
 }
 
-#event img{
-   border-radius: 1%;
+.event a {
+    font-size: var(--font-size);
+}
+
+.event img {
+    border-radius: 1%;
     height: 25rem;
     width:45rem;
     margin-top: 2rem;
     margin-bottom: 3rem;
 }
 
-.event-detail{
-    font-size: 1.5rem;
-    font-family:sans-serif;
-    font-weight: lighter;
-}
-
-.comments{
-    font-size: 22px;
+.comments {
     border: 1px solid lightgrey;
 }
 
-.comments i{
+.comments i {
     color: rgb(206, 209, 215);
-    font-size: large;
     margin-left: 3rem;
 }
 
@@ -249,23 +199,21 @@ textarea {
 .related .events ul{
     list-style: none;
     display: inline-flex;
+    justify-content: space-evenly;
 }
 
 .related img {
-    width: 16rem;
+    width: 15rem;
     height: 15rem;
     border-radius: 0;
 }
 
 
 /* Private Events page. */
-#sidenote{
+div.alert {
     width: fit-content;
     margin:0 auto;
-    border: 1px solid tomato;
-    padding: 0;
 }
-
 
 
 /* Categories page. */
@@ -278,7 +226,7 @@ textarea {
     font-size: 1.5rem;
 }
 
-.container-1 a:hover{
+.container-1 a:hover {
     color: black;
 }
 
@@ -298,29 +246,25 @@ textarea {
 
 
 /* User profile page. */
-.user{
+.user {
     font-size: 1.6rem;
     text-align: center;
 }
 
-.user a{
+.user a {
     font-size: 1.8rem;
 }
 
 
 /*  Forms. */
-form{
-    margin-left: 3%;
-    margin-right: 3%;
+form {
+    margin: 0 3%;
+ 
 }
 
-form.comment{
-    margin: 0 0 0 0;
+form.comment {
+    margin: 0 ;
     font-size: 13px; 
-}
-
-h5{
-   counter-reset:none;
 }
 
 .form-group {
@@ -336,20 +280,16 @@ h5{
     font-size: 1.7rem;
 }
 
+
 /* Footer */
 footer{
-    font-size: 1.7rem;
-    position: sticky;
-    top: 0;
-    margin-bottom: 0;
-    height: auto;
+    font-size: var(--font-size);
+    bottom: 0;
     color:steelblue;
     align-items: center;
 }
 
-footer a{
+footer a {
     font-weight: bold;
     color: green;
-    
 }
-

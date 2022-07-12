@@ -1,47 +1,61 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
-<h2> Evnt: {{event.name}} </h2> 
+<h2> Evnt: {{ event.name }} </h2>  
+<!-- <br> {{ event.id }}  -->
 {% endblock title %}
 
 
 {% block content %}
 <div class="event-detail">
-    <div id="alert">
     {% if messages %}
-    <div class="alert alert-success w-75">
-            {% for messages in messages %}
-                {{messages}} <a href="" class="close">&times;</a>
+        <div class="alert alert-success w-75 m-5" role="alert">
+            {% for message in messages %}
+                <span> {{ message }} </span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             {% endfor %}
         </div>
-        {% endif %}
-    </div>
-    <div id="event">
-        <p>
-            {% if tags %}
-                Tags:
+    {% endif %}
+   
+    <div class="event">
+        Posted by:
+        <div id="posted-by" class="mb-5">
+            {% if event.user.image %}
+            <img src="{{ user.image.url }}" alt="My Avi" class="m-0">
+            {% else %}
+            <img src="/static/images/anon.png" alt="anon" class="m-0">
+            {% endif %}
+            <span> <a href="{{  event.user.get_absolute_url  }}"> {{ event.user }} </a> </span> 
+            <span class="mx-3" style="font-size: 1rem;"> - {{ event.date_posted|timesince }} ago</span>
+        </div>
+
+        {% if tags %}
+            <p> Tags:
                 {% for tag in tags %}
                     <a href="{% url 'events:event-tag' tag.slug %}"> {{ tag }}</a>
                 {% endfor %}
-            {% endif %}
-        </p>
+            </p>
+        {% endif %}
+        
+        Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> <br>
+        {% if event.image %} <img src="{{ event.image.url }}" alt=""> {% endif %}  <br>
+        <p> {{ event.description }} </p>
+        {% if event.host %} <p> Host: {{ event.host|title }} </p> {% endif %} 
+        {% if event.special_guests %} <p> Special guests: {{ event.special_guests }} </p> {% endif %} 
+        <p> Date of Evnt: {{ event.date_of_event }} </p>
+        <p> Venue: {{ event.venue }} </p>
+        <p> Ticket Price: {% if event.ticket_price %} ${{ event.ticket_price }} {% else %} Free {% endif %} </p>
 
-        Category: <a href="{{event.category.get_absolute_url}}"> {{event.category}} </a> <br>
-        {% if event.image %} <img src="{{event.image.url}}" alt=""> {% endif %}  <br>
-        <p> {{event.description}} </p>
-        {% if event.host %} Host: {{event.host|title}} <br> {% endif %}
-        {% if event.special_guests %} Special guests: {{event.special_guests}} <br> {% endif %} 
-        Date: {{event.date}}  <br> {{event.id}} <br>
-        Venue: {{event.venue}}  <br>
-        Ticket Price: {% if event.ticket_price %} ${{event.ticket_price}} {% else %} Free {% endif %} <br>
-
-        <form id="hmm" action="" method="post" class="mt-5" hx-trigger="click" hx-post="." hx-target="#hmm">
+        <!-- <form action="" method="post">
             {% csrf_token %}
             <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Add">
-        </form>
+        </form> -->
 
         {% if user.is_superuser or user == event.user %}
-            <p class="event-buttons mt-5">
+            <p class="event-buttons mt-3">
                 <a class="btn btn-outline-primary px-2" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
                 <a class="btn btn-outline-danger px-2" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
             </p>
@@ -54,8 +68,8 @@
             <h3> Comment Section </h3>
             {% for comments in comment_set %} 
                 <p class="comments p-3">
-                    <span style="font-weight:bold;"> {{comments.username}}: </span> <br>
-                    <span> {{comments.comment}} <br> <i>  {{comments.date_added|timesince}} ago </i> </span>
+                    <span style="font-weight:bold;"> {{ comments.username }}: </span> <br>
+                    <span> {{ comments.comment }} <br> <i>  {{ comments.date_added|timesince }} ago </i> </span>
                 </p>
             {% endfor %} 
             <hr>
@@ -80,8 +94,8 @@
             <div class="events mt-2">
                 {% for events in related_events %}
                     <ul>
-                        <li> {% if events.image %} <img src="{{events.image.url}}" alt=""> <br> {% endif %}
-                             <a href="{{ events.get_absolute_url }}"> > {{ events }}</a> <br> </li>
+                        <li> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
+                            <a href="{{  events.get_absolute_url  }}"> > {{ events }}</a> <br> </li>
                     </ul>
                 {% endfor %}
             </div>

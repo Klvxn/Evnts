@@ -66,6 +66,7 @@ class PublicEventManager(models.Manager):
 class Event(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    date_posted = models.DateTimeField(auto_now_add=True, null=True)
     event_list = models.ForeignKey(
         EventList, on_delete=models.PROTECT, null=True, blank=True
     )
@@ -79,7 +80,7 @@ class Event(models.Model):
     host = models.CharField(max_length=50, blank=True)
     special_guests = models.CharField(max_length=100, blank=True)
     venue = models.CharField(max_length=100)
-    date = models.DateTimeField()
+    date_of_event = models.DateTimeField()
     make_private = models.BooleanField(
         verbose_name="Make Private?",
         help_text="Do you want to keep this evnt from others?",
@@ -107,9 +108,10 @@ class Event(models.Model):
     def get_absolute_url_for_private_events(self):
         return reverse("events:private-event-detail", kwargs={"slug": self.slug})
 
+    @property
     def past_event(self):
         date = timezone.now().date()
-        if self.date.date() < date:
+        if self.date_of_event.date() < date:
             return True
 
 

@@ -27,21 +27,15 @@ class Event(admin.ModelAdmin):
         "category",
         "host",
         "venue",
-        "date",
+        "date_of_event",
         "ticket_price",
-        "make_private",
+        "make_private"
     )
     list_filter = ("ticket_price", "category", "make_private")
-    search_fields = [
-        "name",
-        "venue",
-        "host",
-    ]
-    ordering = ("date",)
+    search_fields = ["name", "venue", "host", ]
+    ordering = ("date_of_event",)
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [
-        CommentInline,
-    ]
+    inlines = [CommentInline,]
 
 
 @admin.register(Comment)

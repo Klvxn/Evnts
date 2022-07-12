@@ -15,10 +15,14 @@
         {% endfor %}
     </ol>
 {% endif %}
+
 {% if messages %}
-    <div class="error-messages bg-danger">
-        {% for messages in messages %}
-            {{ messages }} <a href="" class="close">x</a>
+    <div class="alert alert-danger w-75 m-5" role="alert">
+        {% for message in messages %}
+            <span> {{ message }} </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         {% endfor %}
     </div>
 {% endif %}

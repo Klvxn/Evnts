@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeDoneView,  PasswordChangeView
 from django.urls import reverse_lazy
 
+from events.models import Event
+
 from .models import CustomUser
 from .forms import CustomUserCreationForm, CustomUserEditForm
 
@@ -48,11 +50,12 @@ class UserProfile(LoginRequiredMixin, View):
 
     def get(self, request, username):
         user = get_user(username)
-        if request.user == user:
-            context = {"user": user}
-            return render(request, self.template_name, context)
-        else:
-            return HttpResponseForbidden()
+        # if request.user == user:
+        posted_events = Event.objects.filter(user=user)
+        context = {"user": user, "user_events": posted_events}
+        return render(request, self.template_name, context)
+        # else:
+            # return HttpResponseForbidden()
 
 
 class UserEditProfile(LoginRequiredMixin, View):

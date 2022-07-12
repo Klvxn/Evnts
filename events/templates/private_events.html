@@ -1,34 +1,40 @@
 {% extends 'base.html' %}
 
+
 {% block  title %}
-<h2> My Private Evnts - <i class="fa-light fa-lock"></i></h2>
+<h2> My Private Evnts - <i class="fa fa-lock"></i></h2>
 {% endblock %}
 
 
 {% block content %}
-
-<div class="mt-4"> 
-    <div class="alert alert-warning w-50 text-center"> 
-        Evnts in this page are not visible to the public. <br>
+<div> 
+    <div class="alert alert-danger w-50 mb-5 text-center"> 
+        Evnts in this section are not visible to the public. <br>
         Only you can view, edit or delete these evnts. 
     </div>
 
     {% for events in my_events %}
-        <div class="events-container">
-            {% if events.image %}
-                <img src="{{events.image.url}}" alt=""> 
-            {% endif %} 
+        <div class="p-5 mb-5 border">
+            <div id="posted-by" class="mb-5">
+                <span> posted 5 MINS {{ events.date_posted|timesince }} ago</span>
+            </div>
+
+            {% if events.past_event %}
+                <p class="badge bg-secondary" id="badge"> Past evnt </p> 
+            {% endif %}
             
-            <p> <a href="{{ events.get_absolute_url_for_private_events }}"> {{events}} </a> <br>
-            <!-- {{events.description|truncatewords:'30'}}  <br> -->
-            Date - {{events.date.date}} <br>
-            Venue - {{events.venue}} </p>
-        </div> 
+            <div class="events-container">
+                {% if events.image %}
+                    <img src="{{ events.image.url }}" alt=""> 
+                {% endif %} 
+                <p> <a href="{{ events.get_absolute_url_for_private_events }}"> {{ events }} </a> <br>
+                {{ events.description|truncatewords:30 }}  <br>
+            </div>  
+        </div>
     {% empty %}
-        <p class="container"> You don't have any private evnts. </p>
+        <p> You don't have any private evnts. </p>
     {% endfor %}
 </div>
-
 {% endblock content %}
 
 
