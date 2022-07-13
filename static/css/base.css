@@ -7,12 +7,12 @@ body {
     --font-size: 1.5rem;
 }
 
-main{
+main {
     margin: 0 5%;
 }
 
 
-h1, h2, h3, h4, h5{
+h1, h2, h3, h4, h5 {
     font-family: Muli, sans-serif;
 }
 
@@ -20,8 +20,7 @@ a {
     text-decoration: none;
 }
 
-a.btn{
-    padding:0;
+a.btn {
     font-family: Muli, sans-serif;
     text-align: center;
 }
@@ -42,52 +41,22 @@ a.btn{
 
 
 /* Nav bar  */
-.navbar{
-    padding: 5px;
+nav a.navbar-brand {
+    font-weight: bold;
 }
 
-nav a.navbar-brand{
-    color:white;
-    font-size: 2rem;
+.dropdown li a {
+    font-size: 1rem;
 }
 
-nav a.navbar-brand:hover{
-    color: navy;
-    transition: ease .3s;
+.dropdown-menu {
+    min-width: 0;
 }
 
-.navbar-nav i {
-    font-size: 2rem;
-}
-
-.navbar-nav a{
-    color: white;
-    font-size: 1.5rem;
-    padding: 0;
-}
-
-.navbar-nav button#userMenu ul li a{
-    color: black;
-    padding: 5px;
-}
-
-.dropdown button {
-    color: white;
-    border: 1px solid wheat;
-}
-
-div.dropdown li a{
-    color: dodgerblue;
-    border: none;
-    font-size: 1.3rem;
-    text-align: center;
-    padding: 0;
-}
-
-#userMenu img {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
+.container-fluid .dropdown img {
+    width: 40px;
+    height: 40px;
+    margin: 0;
 }
 
 
@@ -95,16 +64,7 @@ div.dropdown li a{
 h2 {
     font-family: sans-serif;
     margin-bottom: 5rem;
-}
-
-#searchbar {
-    float: right;
-    margin-right: 8rem ;
-}
-
-#searchbar input {
-    border: 2px solid rgb(14, 208, 218);
-    font-family: "Lucida Blackletter"
+    display: inline-block;
 }
 
 
@@ -117,10 +77,6 @@ div.index {
 div.index img {
     height: 20rem;
     width: 20rem;
-}
-
-figure {
-    margin: 4rem;
 }
 
 figcaption {
@@ -157,7 +113,6 @@ figcaption {
     border-radius: 4%;
     height: 10rem;
     width: 20rem;
-    margin-bottom: 2rem;
 }
 
 
@@ -180,7 +135,7 @@ figcaption {
 }
 
 .comments {
-    border: 1px solid lightgrey;
+    border: 1px solid darkgray;
 }
 
 .comments i {
@@ -196,16 +151,16 @@ textarea {
     height:15rem;
 }
 
-.related .events ul{
+.related .events ul {
     list-style: none;
     display: inline-flex;
     justify-content: space-evenly;
 }
 
 .related img {
-    width: 15rem;
-    height: 15rem;
-    border-radius: 0;
+    width: 13rem;
+    height: 13rem;
+    border-radius: 4%;
 }
 
 
@@ -217,42 +172,45 @@ div.alert {
 
 
 /* Categories page. */
-.container-1 {
-    text-align: left;
-    margin-top: 0;
+.category-container {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row wrap;
 }
 
-.container-1 a {
-    font-size: 1.5rem;
+.container-1 .card {
+    height: fit-content;
 }
 
-.container-1 a:hover {
-    color: black;
+.category-events figure {
+    display: flex;
+    flex-flow: row wrap;
 }
 
-.container-1 p {
-    font-size: 1.8rem;
-}
-
-.category-events a{
-    font-size: 1.8rem;
+figure div {
+    margin: 0 auto;
 }
 
 .category-events img {
-    height: 15rem;
-    width: 15rem;
-    border-radius: 50%;
+    height: 13rem;
+    width: 13rem;
 }
 
+.category-events ul {
+    display: inline-flex;
+    justify-content: space-evenly;
+    list-style-type: none;
+}
+
+
+ul {
+    /* list-style-type: none; */
+}
 
 /* User profile page. */
 .user {
-    font-size: 1.6rem;
+    font-size: var(--font-size);
     text-align: center;
-}
-
-.user a {
-    font-size: 1.8rem;
 }
 
 
@@ -268,25 +226,20 @@ form.comment {
 }
 
 .form-group {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+    font-size: var(--font-size);
 }
 
 .form-group input {
     font-size: 1.3rem;
 }
 
-.form-group p {
-    font-size: 1.7rem;
-}
-
 
 /* Footer */
-footer{
+footer {
     font-size: var(--font-size);
     bottom: 0;
     color:steelblue;
-    align-items: center;
 }
 
 footer a {

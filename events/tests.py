@@ -40,7 +40,7 @@ class BaseSetUp(TestCase):
             name="test event",
             description="Van is getting married on new year's eve",
             venue="The Slum",
-            date=timezone.datetime(2022, 9, 1),
+            date_of_event=timezone.datetime(2022, 9, 1),
             tags="Test",
         )
 
@@ -94,7 +94,7 @@ class IndexViewTest(TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
-        self.assertContains(response, "Welcome to EVNT-MNGR")
+        self.assertContains(response, "Welcome to EVNTS")
 
     def test_indexpage_url_exists_by_name(self):
         response = self.client.get(reverse("events:index"))
@@ -128,7 +128,7 @@ class CategoryDetailViewTest(BaseSetUp):
     def test_view_uses_correct_template(self):
         response = self.client.get("/category/wedding/")
         self.assertTemplateUsed(response, "category.html")
-        self.assertContains(response, "Evnts in Wedding")
+        self.assertContains(response, "Category: Wedding")
 
 
 class EventsListViewTest(BaseSetUp):
@@ -263,7 +263,7 @@ class AddEventViewTest(BaseSetUp):
                 "name": "test event 2",
                 "description": "test add event",
                 "venue": "test venue",
-                "date": timezone.datetime(2022, 10, 1),
+                "date_of_event": timezone.datetime(2022, 10, 1),
                 "ticket_price": "12",
                 "tags": "test",
             },
@@ -307,7 +307,7 @@ class EditEventViewTest(BaseSetUp):
                 "name": "test event updated",
                 "description": "description update",
                 "venue": "Venue update",
-                "date": timezone.datetime(2022, 10, 1),
+                "date_of_event": timezone.datetime(2022, 10, 1),
                 "make_private": True,
                 "tags": "Test edit",
             },

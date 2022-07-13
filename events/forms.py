@@ -12,8 +12,7 @@ class AddEventListForm(forms.ModelForm):
 
 
 class AddEventForm(forms.ModelForm):
-    date = forms.DateTimeField(
-        label="Date & Time",
+    date_of_event = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={"placeholder": "YYYY-MM-DD / hh-mm-ss"}),
     )
 
@@ -22,17 +21,16 @@ class AddEventForm(forms.ModelForm):
         exclude = ("user", "slug")
 
     def clean_date(self):
-        date = self.cleaned_data["date"]
-        if date < timezone.now():
+        date_of_event = self.cleaned_data["date"]
+        if date_of_event < timezone.now():
             raise forms.ValidationError(
                 "The date you set is in the past. Only future events can be posted."
             )
-        return date
+        return date_of_event
 
 
 class EditEventForm(forms.ModelForm):
-    date = forms.DateTimeField(
-        label="Date & Time",
+    date_of_event = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={"placeholder": "YYYY-MM-DD / hh-mm-ss"}),
     )
 

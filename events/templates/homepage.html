@@ -23,12 +23,12 @@
         <div class="p-5 mb-5 border">
             <div id="posted-by" class="mb-5">
                 {% if event.user.image %}
-                    <img src="{{user.image.url}}" alt="My Avi" class="mb-0">
+                    <img src="{{ event.user.image.url }}" alt="My Avi">
                 {% else %}
-                    <img src="/static/images/anon.png" alt="anon" class="mb-0">
+                    <img src="/static/images/anon.png" alt="anon">
                 {% endif %}
                 <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
-                <span class="mx-3"> - {{ event.date_posted|timesince }} ago</span>
+                <span class="mx-1"> - {{ event.date_posted|timesince }} ago</span>
             </div>
 
             {% if event.past_event %}
@@ -37,10 +37,10 @@
             
             <div>
                 {% if event.image %}
-                  <img src="{{event.image.url}}" alt=""> 
+                    <img src="{{ event.image.url }}" alt="" class="mb-5"> 
                 {% endif %} 
                 <br>
-                <a href="{{event.get_absolute_url}}"> {{event}} </a>
+                <a href="{{ event.get_absolute_url }}"> {{event}} </a>
                 <p> {{event.description|truncatewords:20}} </p> 
             </div>
         </div>

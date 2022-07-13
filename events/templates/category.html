@@ -3,22 +3,31 @@
 
 
 {% block title %}
-<h2> Evnts in {{ category }} </h2>
+<h2> Category: {{ category }} </h2>
 {% endblock title %}
 
 
 {% block content %}
 <div class="category-events">
-    <figure class="mt-0">
-        <figcaption>Evnts in this category could include birthday parties, holiday parties, christmas parties, halloween parties and all other types of parties. </figcaption> <br>
-        <img src="/media/Screenshot (16).png" class="" alt="">
-        <img src="/media/Screenshot (14).png" class="mx-3" alt="">
-        <img src="/media/Screenshot (12).png" alt="">
+    <p> {{ category.description }} </p>
+    <figure class="mx-auto">
+        <!-- <p>Evnts in this category could include birthday parties, holiday parties, christmas parties, halloween parties and all other types of parties. </p> <br> -->
+        <div>
+            <img src="/media/Screenshot (16).png" class="rounded-circle" alt="">
+            <img src="/static/images/weddding.jpg" title="Wedding" alt="" class="rounded-circle mx-5"> 
+            <img src="/media/Screenshot (12).png" alt="" class="rounded-circle">
+        </div>        
     </figure>
-    <hr>
-    {% for events in queryset %}   
-        ><a href="{{ events.get_absolute_url }}"> {{ events }} </a> {% if events.make_private %} - <i class="fa fa-lock" style="font-size: 20px;"></i> {% endif %} <br>
-    {% endfor %} 
+    <hr class="m-5">
+    <h3> Evnts in: {{ category }} </h3>
+    <div class="px-1 my-5">
+        {% for events in queryset %} 
+            <ul>
+                <li class="text-center"> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
+                   &rightarrowtail; <a href="{{  events.get_absolute_url  }}">  {{ events }}</a> {% if events.make_private %} - <i class="fa fa-lock"></i> {% endif %} </li>
+            </ul>
+        {% endfor %} 
+    </div>
 </div>
 {% endblock  %}
 

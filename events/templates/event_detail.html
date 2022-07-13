@@ -24,12 +24,12 @@
         Posted by:
         <div id="posted-by" class="mb-5">
             {% if event.user.image %}
-            <img src="{{ user.image.url }}" alt="My Avi" class="m-0">
+                <img src="{{ event.user.image.url }}" alt="My Avi" class="m-0">
             {% else %}
-            <img src="/static/images/anon.png" alt="anon" class="m-0">
+                <img src="/static/images/anon.png" alt="anon" class="m-0">
             {% endif %}
-            <span> <a href="{{  event.user.get_absolute_url  }}"> {{ event.user }} </a> </span> 
-            <span class="mx-3" style="font-size: 1rem;"> - {{ event.date_posted|timesince }} ago</span>
+            <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
+            <span class="mx-1" style="font-size: 1rem;"> - {{ event.date_posted|timesince }} ago</span>
         </div>
 
         {% if tags %}
@@ -91,11 +91,11 @@
         <hr>
         <div class="related mt-5">
            <h3> Related Events </h3>
-            <div class="events mt-2">
+            <div class="events my-5">
                 {% for events in related_events %}
                     <ul>
-                        <li> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
-                            <a href="{{  events.get_absolute_url  }}"> > {{ events }}</a> <br> </li>
+                        <li class="text-center"> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
+                            <a href="{{  events.get_absolute_url  }}"> {{ events }}</a> <br> </li>
                     </ul>
                 {% endfor %}
             </div>

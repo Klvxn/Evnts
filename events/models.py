@@ -73,8 +73,8 @@ class Event(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="events"
     )
-    name = models.CharField(max_length=50, unique=True)
-    image = models.ImageField(upload_to="media/event imgs", null=True, blank=True)
+    name = models.CharField(max_length=20, unique=True)
+    image = models.ImageField(upload_to="media/event imgs", null=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
     description = models.TextField()
     host = models.CharField(max_length=50, blank=True)

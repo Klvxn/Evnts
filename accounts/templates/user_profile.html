@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
 <h3 id="title"> {{ user.username|title }} </h3>
 {% endblock title %}    
@@ -35,23 +36,23 @@
 
     <div class="user-buttons mt-5">
         {% if request.user == user %}
-            <a href="{% url 'accounts:edit-profile' user.username %}" class="btn btn-outline-secondary py-1" >Edit profile</a>
+            <a href="{% url 'accounts:edit-profile' user.username %}" class="btn btn-outline-secondary py-1">Edit profile</a>
             <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-warning py-1">Change password</a>
             <a href="{% url 'accounts:delete-account' user.username  %}" class="btn btn-outline-danger py-1">Delete account</a>
         {% endif %}
     </div>
-
 
     <hr>
     <div class="mt-5">
         <h3> Evnts by {{ user }} </h3>
         <p> {{ user }} has posted {{ user_events.count }} evnts. </p>
         {% for events in user_events %}
-            <a href="{{  events.get_absolute_url  }}"> {{ events }} </a> <br>
+            <a href="{{ events.get_absolute_url }}"> {{ events }} </a> <br>
         {% endfor %}
     </div>
 </div>
 {% endblock content %}
+
 
 {% block footer %} {% endblock footer %}
 

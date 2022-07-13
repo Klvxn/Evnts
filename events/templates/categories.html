@@ -7,12 +7,32 @@
 
 
 {% block content %} 
-<div class="container-1 mt-0"> 
+<div class="container-1"> 
     <p> These are the categories of evnts. </p>
-    {% for category in categories %}
-        <a href="{{ category.get_absolute_url }}"> {{ category }} </a> <br>
-    {% endfor %}
-</div> 
+    <div class="category-container"> 
+        {% for category, events in events %}
+            <div class="m-3 card-secondary card bg-light border" style="width: 45%;">
+                <a class="category card-header text-center text-dark p-2 border" href="{{ category.get_absolute_url }}"> {{ category }} </a> <br>
+                <div class="card-body">
+                    {% if events %}
+                        <div class="card-subtitle text-muted"> Evnts: </div>
+                        {% for evnts in events %} 
+                            &rightarrowtail; <a class="card-link" href="{{ evnts.get_absolute_url }}"> {{ evnts }} </a> <br>
+                        {% endfor %}
+                            <!-- <a class="btn btn-outline-primary mt-5 p-2" href="{{ category.get_absolute_url }}">Check others</a> -->
+                    {% else %}
+                        <div class="p-3"> There are no evnts under this category. </div>
+                    {% endif %}
+                </div>
+                {% if events %}
+                    <div class="card-footer border text-muted">
+                        {{ events.count }} evnts in this category.
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock content %}
 
 

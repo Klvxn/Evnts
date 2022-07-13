@@ -39,9 +39,13 @@ class CategoryListView(View):
 
     def get(self, request):
         categories = Category.objects.all()
+        events = []
         for category in categories:
-            events = category.events(manager="public").all()
-        context = {"categories": categories, "events": events}
+            events.append((category, Event.public.filter(category=category)))
+        context = {
+            "categories": categories,
+            "events": events,
+        }
         return render(request, self.template_name, context)
 
 
@@ -53,8 +57,8 @@ class CategoryDetailView(View):
         category = Category.objects.get(slug=slug)
         if request.user.is_authenticated:
             queryset = (
-                category.events(manager="private").filter(user=request.user)
-                | category.events(manager="public").all()
+                category.events(manager="public").all()
+                | category.events(manager="private").filter(user=request.user)
             )
         else:
             queryset = category.events(manager="public").all()
@@ -68,7 +72,7 @@ class EventsListView(View):
     template_name = "homepage.html"
 
     def get(self, request):
-        events = Event.public.all().order_by("date_posted")
+        events = Event.public.all().order_by("-date_posted")
         context = {"events": events}
         return render(request, self.template_name, context)
 
@@ -233,11 +237,10 @@ class EditEventView(LoginRequiredMixin, View):
                 return redirect(edit)
             else:
                 messages.error(request, "Error while updating evnt.")
-            context = {"form": form, "event": event}
-            return render(request, self.template_name, context)
         else:
             return HttpResponseForbidden()
-
+        context = {"form": form, "event": event}
+        return render(request, self.template_name, context)
 
 class DeleteEventView(LoginRequiredMixin, View):
 

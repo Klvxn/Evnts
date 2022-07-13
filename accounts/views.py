@@ -44,7 +44,7 @@ class RegisterUser(View):
         return render(request, self.template_name, context)
 
 
-class UserProfile(LoginRequiredMixin, View):
+class UserProfile(View):
 
     template_name = "user_profile.html"
 
