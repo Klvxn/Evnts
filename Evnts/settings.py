@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "taggit",
     "bootstrap4",
     "fontawesomefree",
+    "ckeditor",
 ]
 
 MIDDLEWARE = [

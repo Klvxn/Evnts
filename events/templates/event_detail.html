@@ -21,8 +21,8 @@
     {% endif %}
    
     <div class="event">
-        Posted by:
-        <div id="posted-by" class="mb-5">
+        <div id="posted-by" class="mb-3 p-2">
+            <p> Posted by: </p>
             {% if event.user.image %}
                 <img src="{{ event.user.image.url }}" alt="My Avi" class="m-0">
             {% else %}
@@ -32,6 +32,7 @@
             <span class="mx-1" style="font-size: 1rem;"> - {{ event.date_posted|timesince }} ago</span>
         </div>
 
+        <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
         {% if tags %}
             <p> Tags:
                 {% for tag in tags %}
@@ -40,9 +41,8 @@
             </p>
         {% endif %}
         
-        Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> <br>
-        {% if event.image %} <img src="{{ event.image.url }}" alt=""> {% endif %}  <br>
-        <p> {{ event.description }} </p>
+        {% if event.image %} <div class="image"> <img src="{{ event.image.url }}" alt=""> {% endif %} </div>
+        <p> {{ event.description|safe }} </p>
         {% if event.host %} <p> Host: {{ event.host|title }} </p> {% endif %} 
         {% if event.special_guests %} <p> Special guests: {{ event.special_guests }} </p> {% endif %} 
         <p> Date of Evnt: {{ event.date_of_event }} </p>
@@ -55,19 +55,19 @@
         </form> -->
 
         {% if user.is_superuser or user == event.user %}
-            <p class="event-buttons mt-3">
-                <a class="btn btn-outline-primary px-2" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
-                <a class="btn btn-outline-danger px-2" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
+            <p class="event-buttons">
+                <a class="btn btn-outline-primary px-2 py-1" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
+                <a class="btn btn-outline-danger px-2 py-1" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
             </p>
         {% endif %}
     </div>
 
     <hr>
-    <div class="cs mb-5 mt-5">
+    <div class="cs my-5">
         {% if comment_set %}
             <h3> Comment Section </h3>
             {% for comments in comment_set %} 
-                <p class="comments p-3">
+                <p class="comments p-1">
                     <span style="font-weight:bold;"> {{ comments.username }}: </span> <br>
                     <span> {{ comments.comment }} <br> <i>  {{ comments.date_added|timesince }} ago </i> </span>
                 </p>

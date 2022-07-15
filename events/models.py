@@ -1,3 +1,5 @@
+from ckeditor.fields import RichTextField
+
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
@@ -26,10 +28,16 @@ class Category(models.Model):
     slug = models.SlugField(max_length=50, null=True)
 
     class Meta:
+        ordering = ("name",)
         verbose_name_plural = "Categories"
 
     def __str__(self):
         return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("events:category-detail", kwargs={"slug": self.slug})
@@ -67,16 +75,16 @@ class Event(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True, null=True)
-    event_list = models.ForeignKey(
-        EventList, on_delete=models.PROTECT, null=True, blank=True
-    )
+    # event_list = models.ForeignKey(
+        # EventList, on_delete=models.PROTECT, null=True, blank=True
+    # )
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="events"
     )
-    name = models.CharField(max_length=20, unique=True)
-    image = models.ImageField(upload_to="media/event imgs", null=True)
+    name = models.CharField(max_length=30)
+    image = models.ImageField(upload_to="media/event imgs", null=True, blank=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
-    description = models.TextField()
+    description = RichTextField()
     host = models.CharField(max_length=50, blank=True)
     special_guests = models.CharField(max_length=100, blank=True)
     venue = models.CharField(max_length=100)
@@ -86,7 +94,7 @@ class Event(models.Model):
         help_text="Do you want to keep this evnt from others?",
         default=False,
     )
-    ticket_price = models.PositiveIntegerField(blank=True, null=True)
+    ticket_price = models.PositiveIntegerField(null=True)
 
     # Managers
     objects = models.Manager()

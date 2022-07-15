@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load bootstrap4 %}
 
 
 {% block title %}
@@ -12,13 +12,17 @@
 
 
 {% block content %}
-<form method="post" action="" class="form-group">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <p> <a href="">Forgotten password? </a></p>
-    <p> <input type="submit" value="Login" class="btn btn-outline-success mt-5"> </p> <hr>
-    <p class="mx-0"> Don't have an account? <a href="{% url 'accounts:register' %}"> &raquo; Register </a> </p>
-</form>
+<div class="form-control p-5">
+    <form method="post" action="" class="form-group">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="submit">
+            <a href="">Forgotten password? </a> <br>
+            <button type="submit" class="btn btn-outline-success mt-5"> Login  </button> <hr>
+            <p class="mx-0"> Don't have an account? <a href="{% url 'accounts:register' %}"> Register </a> </p>
+        </div>
+    </form>
+</div>
 {% endblock content %} 
 
 

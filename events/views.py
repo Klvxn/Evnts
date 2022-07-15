@@ -59,9 +59,9 @@ class CategoryDetailView(View):
             queryset = (
                 category.events(manager="public").all()
                 | category.events(manager="private").filter(user=request.user)
-            )
+            ).order_by("-date_posted")
         else:
-            queryset = category.events(manager="public").all()
+            queryset = category.events(manager="public").all().order_by("-date_posted")
         context = {"queryset": queryset, "category": category}
         return render(request, self.template_name, context)
 

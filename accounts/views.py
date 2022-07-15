@@ -50,12 +50,9 @@ class UserProfile(View):
 
     def get(self, request, username):
         user = get_user(username)
-        # if request.user == user:
         posted_events = Event.objects.filter(user=user)
         context = {"user": user, "user_events": posted_events}
         return render(request, self.template_name, context)
-        # else:
-            # return HttpResponseForbidden()
 
 
 class UserEditProfile(LoginRequiredMixin, View):
@@ -84,10 +81,10 @@ class UserEditProfile(LoginRequiredMixin, View):
                 return redirect(user.get_absolute_url())
             else:
                 messages.error(request, "Error updating your profile.")
-            context = {"form": form}
-            return render(request, self.template_name, context)
         else:
             return HttpResponseForbidden()
+        context = {"form": form}
+        return render(request, self.template_name, context)
 
 
 class DeleteUserAccount(LoginRequiredMixin, View):

@@ -41,10 +41,6 @@ a.btn {
 
 
 /* Nav bar  */
-nav a.navbar-brand {
-    font-weight: bold;
-}
-
 .dropdown li a {
     font-size: 1rem;
 }
@@ -63,7 +59,7 @@ nav a.navbar-brand {
 /*  Page title */
 h2 {
     font-family: sans-serif;
-    margin-bottom: 5rem;
+    margin-bottom: 2.5rem;
     display: inline-block;
 }
 
@@ -117,9 +113,8 @@ figcaption {
 
 
 /* Events detail page. */
-.event-detail{
-    font-size: var(--font-size);
-    margin: 0 auto;
+div.image {
+    text-align: center;
 }
 
 .event a {
@@ -136,6 +131,8 @@ figcaption {
 
 .comments {
     border: 1px solid darkgray;
+    /* margin: 0 auto; */
+    width: fit-content;
 }
 
 .comments i {
@@ -143,12 +140,12 @@ figcaption {
     margin-left: 3rem;
 }
 
-form.cs input, textarea{
+form.cs input, textarea {
     width: 29rem;
 }
 
 textarea {
-    height:15rem;
+    height:13rem;
 }
 
 .related .events ul {
@@ -203,10 +200,6 @@ figure div {
 }
 
 
-ul {
-    /* list-style-type: none; */
-}
-
 /* User profile page. */
 .user {
     font-size: var(--font-size);
@@ -215,9 +208,14 @@ ul {
 
 
 /*  Forms. */
+.form-control {
+    margin: 0 auto;
+    width: 80%;
+    text-align: center;
+}
+
 form {
-    margin: 0 3%;
- 
+    width: 100%;
 }
 
 form.comment {
@@ -225,15 +223,29 @@ form.comment {
     font-size: 13px; 
 }
 
-.form-group {
+form .form-group {
+    margin: 0 auto;
     margin-bottom: 2.5rem;
     font-size: var(--font-size);
 }
 
-.form-group input {
-    font-size: 1.3rem;
+.form-check .form-check-input {
+    float: none;
+    border-radius: 0 ;
 }
 
+.form-group input {
+    /* width: 100%; */
+}
+
+.form-group label {
+    text-align: center;
+    display: block;
+}
+
+form .submit {
+    text-align: center;
+}
 
 /* Footer */
 footer {

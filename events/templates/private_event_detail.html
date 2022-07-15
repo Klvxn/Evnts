@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
 <h2> Evnt: {{ event.name }} </h2> 
 {% endblock title %}
@@ -33,7 +34,7 @@
 
         Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> <br>
         {% if event.image %} <img src="{{ event.image.url }}" alt=""> {% endif %}  <br>
-        <p> {{ event.description }} </p>
+        <p> {{ event.description|safe }} </p>
         {% if event.host %} <p> Host: {{ event.host|title }} </p> {% endif %} 
         {% if event.special_guests %} <p> Special guests: {{ event.special_guests }} </p> {% endif %} 
         <p> Date of Evnt: {{ event.date_of_event }} </p>

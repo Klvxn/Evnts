@@ -1,6 +1,8 @@
-import datetime
+from datetime import datetime, timedelta
+from pprint import pprint
+from model_bakery import baker
 
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
 
@@ -40,7 +42,7 @@ class BaseSetUp(TestCase):
             name="test event",
             description="Van is getting married on new year's eve",
             venue="The Slum",
-            date_of_event=timezone.datetime(2022, 9, 1),
+            date_of_event=datetime(2022, 9, 1),
             tags="Test",
         )
 
@@ -64,9 +66,9 @@ class EventModelTest(BaseSetUp):
         self.assertEqual(self.event.get_absolute_url(), "/events/test-event/")
 
     def test_past_event_date(self):
-        time = timezone.now() - datetime.timedelta(days=1)
-        event = Event(name="Halloween", date=time)
-        self.assertIs(event.past_event(), True)
+        time = timezone.now() -  timedelta(days=1)
+        event = Event(name="Halloween", date_of_event=time)
+        self.assertIs(event.past_event, True)
 
 
 class CommentModelTest(BaseSetUp):
@@ -110,7 +112,7 @@ class CategoriesListViewTest(BaseSetUp):
         response = self.client.get(reverse("events:categories"))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         response = self.client.get("/categories/")
         self.assertTemplateUsed(response, "categories.html")
         self.assertContains(response, "Categories")
@@ -125,7 +127,7 @@ class CategoryDetailViewTest(BaseSetUp):
         response = self.client.get(reverse("events:category-detail", args=["wedding"]))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         response = self.client.get("/category/wedding/")
         self.assertTemplateUsed(response, "category.html")
         self.assertContains(response, "Category: Wedding")
@@ -140,7 +142,7 @@ class EventsListViewTest(BaseSetUp):
         response = self.client.get(reverse("events:home"))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         response = self.client.get("/home/")
         self.assertTemplateUsed(response, "homepage.html")
         self.assertContains(response, "Evnts")
@@ -155,7 +157,7 @@ class EventDetailViewTest(BaseSetUp):
         response = self.client.get(reverse("events:event-detail", args=["test-event"]))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         response = self.client.get("/events/test-event/")
         self.assertTemplateUsed(response, "event_detail.html")
         self.assertContains(response, "test event")
@@ -169,12 +171,12 @@ class EventDetailViewTest(BaseSetUp):
 
 
 class PrivateEventViewTest(BaseSetUp):
-    def test_url(self):
+    def test_view_url(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get("/private-events/")
         self.assertEqual(response.status_code, 200)
 
-    def test_url_exists_by_name(self):
+    def test_view_url_exists_by_name(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get(reverse("events:private-events"))
         self.assertEqual(response.status_code, 200)
@@ -184,22 +186,17 @@ class PrivateEventViewTest(BaseSetUp):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/accounts/login/?next=/private-events/")
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get("/private-events/")
         self.assertTemplateUsed(response, "private_events.html")
         self.assertContains(response, "My Private Evnts")
 
-    def test_a_user_cannot_view_another_user_private_event(self):
-        event = self.event
-        # s = Event.objects.get(id=event.id)
-        # s.make_private = True
-        # s.save()
-        Event.objects.filter(id=event.id).update(make_private=True)
-        # self.client.login(username="testuser_2", password="4321drowssap")
-        response = self.client.get("/events/test-event/")
-        self.assertEqual(response.status_code, 200)
-        self.assertIs(event.make_private, True)
+    def test_user_cannot_view_another_user_private_event(self):
+        Event.objects.filter(id=self.event.id).update(make_private=True)
+        self.client.login(username="testuser_2", password="4321drowssap")
+        response = self.client.get("/my-private-events/test-event/")
+        self.assertEqual(response.status_code, 403)
 
     def test_view_queryset_is_correct(self):
         event = self.event
@@ -224,7 +221,7 @@ class ManageEventsViewTest(BaseSetUp):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/accounts/login/?next=/manage-events/")
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get("/manage-events/")
         self.assertTemplateUsed(response, "manage_events.html")
@@ -247,7 +244,7 @@ class AddEventViewTest(BaseSetUp):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/accounts/login/?next=/add-event/")
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get("/add-event/")
         self.assertTemplateUsed(response, "add_event.html")
@@ -255,22 +252,21 @@ class AddEventViewTest(BaseSetUp):
 
     def test_add_event(self):
         self.client.login(username="testuser", password="password1234")
-        response = self.client.post(
-            "/add-event/",
-            {
-                "user": self.user,
-                "category": {"choices": ("Wedding")},
-                "name": "test event 2",
-                "description": "test add event",
-                "venue": "test venue",
-                "date_of_event": timezone.datetime(2022, 10, 1),
-                "ticket_price": "12",
-                "tags": "test",
-            },
-        )
+        data = {
+            "user": self.user,
+            "category": self.category,
+            "name": "test event 2",
+            "description": "test add event",
+            "venue": "test venue",
+            "date_of_event": timezone.datetime(2022, 10, 1),
+            "ticket_price": "12",
+            "tags": "test",
+        }
+        response = self.client.post("/add-event/",data=data)
+        print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Your evnt was not posted. Try again.")
-        self.assertContains(response, "categoryxx")
+        self.assertContains(response, "This field is required")
 
 
 class EditEventViewTest(BaseSetUp):
@@ -291,7 +287,7 @@ class EditEventViewTest(BaseSetUp):
             response, "/accounts/login/?next=/events/test-event/edit-event/"
         )
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get("/events/test-event/edit-event/")
         self.assertTemplateUsed(response, "edit_event.html")
@@ -300,26 +296,37 @@ class EditEventViewTest(BaseSetUp):
 
     def test_edit_event(self):
         self.client.login(username="testuser", password="password1234")
-        response = self.client.post(
-            "/events/test-event/edit-event/",
-            {
-                "category": self.category,
-                "name": "test event updated",
-                "description": "description update",
-                "venue": "Venue update",
-                "date_of_event": timezone.datetime(2022, 10, 1),
-                "make_private": True,
-                "tags": "Test edit",
-            },
+        event = baker.make(
+            Event,
+            # category=self.category,
+            name="testubg model bakery",
+            description="event description updated",
+            image="media/concert.png",
+            ticket_price=20,
+            tags="kanye",
+            make_m2m=True
         )
-        self.assertEqual(response.status_code, 200)
+        # data = {
+        #     "category": self.category,
+        #     "name": "test event updated",
+        #     "description": "description update",
+        #     "venue": "Venue update",
+        #     "date_of_event": datetime.t(2022, 10, 1),
+        #     "make_private": True,
+        #     "tags": "Test edit"
+        # },
+        pprint(event.__dict__)
+        response = self.client.post("/events/test-event/edit-event/", data=event.__dict__)
+        # self.assertEqual(response.status_code, 302)
         self.assertContains(response, "Error while updating evnt.")
-        self.assertContains(response, "categoryxxy")
+        print(response.content)
+        self.assertContains(response, "Enter a valid category")
 
     def test_only_event_user_can_edit_their_event(self):
         self.client.login(username="testuser_2", password="4321drowssap")
-        response = self.client.post("/events/test-event/edit-event/")
-        self.assertEqual(response.status_code, 403)
+        get_response = self.client.get("/events/test-event/edit-event/")
+        post_response = self.client.post("/events/test-event/edit-event/")
+        self.assertEqual(get_response.status_code, post_response.status_code, 403)
 
 
 class DeleteEventViewTest(BaseSetUp):
@@ -340,12 +347,11 @@ class DeleteEventViewTest(BaseSetUp):
             response, "/accounts/login/?next=/events/test-event/delete-event/"
         )
 
-    def test_view_uses_correct_template(self):
+    def test_view_renders_correct_template(self):
         self.client.login(username="testuser", password="password1234")
         response = self.client.get("/events/test-event/delete-event/")
         self.assertTemplateUsed(response, "delete_event.html")
         self.assertContains(response, "Delete evnt")
-
 
     def test_user_can_delete_event(self):
         self.client.login(username="testuser", password="password1234")
@@ -354,7 +360,7 @@ class DeleteEventViewTest(BaseSetUp):
         self.assertRedirects(response, "/home/")
 
     def test_only_event_user_can_delete_their_event(self):
-        self.client.login(username="testuser_2", password="password1234")
+        self.client.login(username="testuser_2", password="4321drowssap")
         get_response = self.client.get("/events/test-event/delete-event/")
         post_response = self.client.post("/events/test-event/delete-event/")
         self.assertEqual(get_response.status_code, post_response.status_code, 403)

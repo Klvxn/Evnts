@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load bootstrap4 %}
 
 
 {% block title %}
@@ -10,9 +10,7 @@
 {% block content %}
 {% if form.errors %}
     <ol>
-        {% for error in form.errors %}
-        <li><strong>{{ error }}xxy </strong> </li>
-        {% endfor %}
+        <li><strong>{{ form.errors }} </strong> </li>
     </ol>
 {% endif %}
 
@@ -27,10 +25,13 @@
     </div>
 {% endif %}
 
-<form enctype="multipart/form-data" method="post" action="" class="form-group">
-    {% csrf_token %}
-    {{ form|crispy }} <br>
-    <input type="submit" value="Save changes" class="btn btn-primary"/>
-</form>
+<div class="form-control p-5">
+    <form enctype="multipart/form-data" method="post" action="" class="form-group">
+        {% csrf_token %}
+        {{ form.media }}
+        {% bootstrap_form form %} <hr>
+        <button class="btn btn-primary submit"> Save changes </button>
+    </form>
+</div>
 
 {% endblock %}

@@ -119,12 +119,9 @@ class UserProfileViewTest(BaseSetUp):
         response = self.client.get(reverse("accounts:user-profile", args=["testuser_1"]))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_is_only_accessible_to_logged_in_users_only(self):
+    def test_view_is_accessible_to_users(self):
         response = self.client.get("/accounts/testuser_1/profile/")
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(
-            response, "/accounts/login/?next=/accounts/testuser_1/profile/"
-        )
+        self.assertEqual(response.status_code, 200)
 
     def test_view_renders_correct_template(self):
         self.client.login(username="testuser_1", password="password1234")

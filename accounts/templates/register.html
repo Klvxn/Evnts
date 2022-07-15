@@ -21,12 +21,16 @@
     </div>
 {% endif %}
 
-<form enctype="multipart/form-data" method="post" action="" class="form-group">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <p> <input type="submit" value="Create account" class="btn btn-outline-success mt-5"/> </p> <hr>
-    <p class="mx-0"> Already have an account? <a href="{% url 'accounts:login' %}"> &raquo; Login</a></p>
-</form>
+<div class="form-control p-5">
+    <form enctype="multipart/form-data" method="post" action="" class="form-group">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="submit">
+            <button type="submit" class="btn btn-outline-success mt-5"/> Create account </button> <hr>
+            <p class="mx-0"> Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+        </div>
+    </form>
+</div>
 {% endblock content %}
 
 
