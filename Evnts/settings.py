@@ -38,17 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # My apps
-    "events.apps.EventsConfig",
-    "accounts.apps.AccountsConfig",
+    'events.apps.EventsConfig',
+    'accounts.apps.AccountsConfig',
 
     # Third party
-    "crispy_forms",
-    "taggit",
-    "bootstrap4",
-    "fontawesomefree",
-    "ckeditor",
+    'taggit',
+    'bootstrap4',
+    'ckeditor',
+    'django_comments_xtd',
+    'django_comments'
+    
 ]
 
 MIDDLEWARE = [
@@ -66,7 +68,7 @@ ROOT_URLCONF = 'Evnts.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / "templates"],
+        'DIRS': [ BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,20 +143,30 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # Custom User model
 AUTH_USER_MODEL = "accounts.CustomUser"
 
+
 # Emails
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 
 # Login settings
 LOGIN_REDIRECT_URL = "events:home"
 LOGOUT_REDIRECT_URL = "/"
 
-# Crispy form
-CRISPY_TEMPLATE_PACK = "bootstrap3"
+
+SITE_ID = 1
+
+
+# Django-comments-xtd settings
+COMMENTS_XTD_COMFIRM_EMAIL = False
+COMMENTS_APP = 'django_comments_xtd'
+COMMENTS_XTD_MAX_THREAD_LEVEL = 3

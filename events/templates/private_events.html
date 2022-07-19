@@ -14,21 +14,21 @@
     </div>
 
     {% for events in my_events %}
-        <div class="p-5 mb-5 border">
+        <div class="p-3 m-5 border">
             <div id="posted-by" class="mb-5">
-                <span> posted 5 MINS {{ events.date_posted|timesince }} ago</span>
+                <span class="card-header border"> posted 5 mins {{ events.date_posted|timesince }} ago</span>
             </div>
 
             {% if events.past_event %}
                 <p class="badge bg-secondary" id="badge"> Past evnt </p> 
             {% endif %}
             
-            <div class="events-container">
+            <div class="events-container mx-5">
                 {% if events.image %}
                     <img src="{{ events.image.url }}" alt=""> 
                 {% endif %} 
                 <p> <a href="{{ events.get_absolute_url_for_private_events }}"> {{ events }} </a> <br>
-                {{ events.description|truncatewords:30 }}  <br>
+                {{ events.description|truncatewords:30|safe }}  <br>
             </div>  
         </div>
     {% empty %}

@@ -10,7 +10,7 @@ from django.views import View
 from taggit.models import Tag
 
 from .forms import AddEventForm, CommentForm, EditEventForm
-from .models import Category, Event, EventList
+from .models import Category, Event, EventList, Comment
 
 
 # Create your views here.
@@ -92,26 +92,30 @@ class EventDetailView(View):
         comment_set = event.comments.all()
         context = {
             "event": event,
+            "events": Event,
+            "comment": Comment,
             "tags": tags,
             "related_events": related_events[:4],
-            "comment_set": comment_set,
-            "form": form,
+            "comments": comment_set,
+            "form": form,  
         }
         return render(request, self.template_name, context)
 
     def post(self, request, slug):
         event = get_event(slug)
-        event_list = {}
-        if request.POST.get(str(event.id)) == "Add":
+
+        event_list = []
+        if request.POST[str(event.id)] == "Add to attend-list":
+            event_list.append((event.id, request.user.username))
+            print (event_list)
             return HttpResponse("This evnt has been added to your evnt list.")
 
-        # print(event_list)
         form = self.form_class(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.event = get_event(slug)
             comment.save()
-            return redirect(get_event(slug))
+            return redirect(event)
 
 
 class EventListView(LoginRequiredMixin, View):
@@ -154,8 +158,12 @@ class PrivateEventsView(LoginRequiredMixin, View):
 
     template_name = "private_events.html"
 
-    def get(self, request):
+    def get(self, request, *args):
         my_events = Event.private.filter(user=request.user)
+        try:
+            event = get_event(slug=args)
+        except ObjectDoesNotExist:
+            pass
         context = {"my_events": my_events}
         return render(request, self.template_name, context)
 

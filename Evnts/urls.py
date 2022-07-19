@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("events.urls")),
     path("accounts/", include("accounts.urls")),
+    path("comments/", include('django_comments_xtd.urls'))
 ]
 
 if settings.DEBUG:

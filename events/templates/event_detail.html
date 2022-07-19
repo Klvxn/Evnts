@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load comments %}
 
 
 {% block title %}
 <h2> Evnt: {{ event.name }} </h2>  
-<!-- <br> {{ event.id }}  -->
+<br> {{ event.id }} 
 {% endblock title %}
 
 
@@ -29,7 +31,7 @@
                 <img src="/static/images/anon.png" alt="anon" class="m-0">
             {% endif %}
             <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
-            <span class="mx-1" style="font-size: 1rem;"> - {{ event.date_posted|timesince }} ago</span>
+            <span class="mx-1" style="font-size: 1rem;"> &sdot;&nbsp; {{ event.date_posted|timesince }} ago</span>
         </div>
 
         <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
@@ -49,10 +51,14 @@
         <p> Venue: {{ event.venue }} </p>
         <p> Ticket Price: {% if event.ticket_price %} ${{ event.ticket_price }} {% else %} Free {% endif %} </p>
 
-        <!-- <form action="" method="post">
-            {% csrf_token %}
-            <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Add">
-        </form> -->
+        {% if request.user.is_authenticated %}
+            <div class="text-center">
+                <form action="" method="post" class="form-group">
+                    {% csrf_token %}
+                    <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Add to attend-list">
+                </form>
+            </div>
+        {% endif %}
 
         {% if user.is_superuser or user == event.user %}
             <p class="event-buttons">
@@ -62,45 +68,104 @@
         {% endif %}
     </div>
 
-    <hr>
-    <div class="cs my-5">
-        {% if comment_set %}
-            <h3> Comment Section </h3>
-            {% for comments in comment_set %} 
-                <p class="comments p-1">
-                    <span style="font-weight:bold;"> {{ comments.username }}: </span> <br>
-                    <span> {{ comments.comment }} <br> <i>  {{ comments.date_added|timesince }} ago </i> </span>
-                </p>
-            {% endfor %} 
-            <hr>
-        {% endif %}
-    </div>
 
-    <h3> Add Comment</h3>
-    <form action="" class="cs" method="post">
-       {% csrf_token %}
-        <p> <label for="username">Username: </label> <br>
-            <input id="username" name="username" required type="text"> </p>
-        
-        <p> <label for="comment">Comment: </label> <br>
-            <textarea id="comment" name="comment" required> </textarea> </p>
-        <button class="btn btn-outline-success py-1 px-2 mp-3" type="submit"> Post comment </button>
-    </form>
-
-    {% if related_events %}
-        <hr>
-        <div class="related mt-5">
-           <h3> Related Events </h3>
-            <div class="events my-5">
-                {% for events in related_events %}
-                    <ul>
-                        <li class="text-center"> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
-                            <a href="{{  events.get_absolute_url  }}"> {{ events }}</a> <br> </li>
-                    </ul>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
+    {% get_comment_count for events as comment_count %}
+<div class="py-4 text-center">
+  
+  {{ comment_count }} comment{{ comment_count|pluralize }}
+  ha{{ comment_count|pluralize:"s,ve" }} been posted.
 </div>
+
+{% if comment_count %}
+    <hr/>
+    <div class="comments">
+    {% get_comment_list for events as comment %} {{ comment }}
+    </div>
+{% endif %}
+
+<div class="card card-block mb-5">
+  <div class="card-body">
+    <h4 class="card-title text-center pb-3">Post your comment</h4>
+      {% get_comment_form for events as form %}
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button> submit </button>
+      </form>
+  </div>
+</div>
+
+{% if related_events %}
+    <hr>
+    <div class="related mt-5">
+       <h3> Related Events </h3>
+        <div class="events my-5">
+            {% for events in related_events %}
+                <ul>
+                    <li class="text-center"> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
+                        <a href="{{  events.get_absolute_url  }}"> {{ events }}</a> <br> </li>
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
 {% endblock %}
 
+
+{% block footer %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+<div class="cs my-5">
+    {% if comment_set %}
+        <h3> Comment Section </h3>
+        {% for comments in comment_set %} 
+            <p class="comments p-1">
+                <span style="font-weight:bold;"> {{ comments.username }}: </span> <br>
+                <span> {{ comments.comment }} <br> <i>  {{ comments.date_added|timesince }} ago </i> </span>
+            </p>
+        {% endfor %} 
+        <hr>
+    {% endif %}
+</div>
+
+<h3> Add Comment</h3>
+<form action="" class="cs" method="post">
+   {% csrf_token %}
+    <p> <label for="username">Username: </label> <br>
+        <input id="username" name="username" required type="text"> </p>
+    
+    <p> <label for="comment">Comment: </label> <br>
+        <textarea id="comment" name="comment" required> </textarea> </p>
+    <button class="btn btn-outline-success py-1 px-2 mp-3" type="submit"> Post comment </button>
+</form>
+
+{% if related_events %}
+    <hr>
+    <div class="related mt-5">
+       <h3> Related Events </h3>
+        <div class="events my-5">
+            {% for events in related_events %}
+                <ul>
+                    <li class="text-center"> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
+                        <a href="{{  events.get_absolute_url  }}"> {{ events }}</a> <br> </li>
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+</div>

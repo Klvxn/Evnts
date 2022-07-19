@@ -2,7 +2,6 @@
 
 
 {% block title %}
-<h2> Evnts </h2>
 {% endblock title %}
 
 
@@ -18,29 +17,29 @@
     </div>
 {% endif %}
 
-<div class="container-fluid p-5">
+<div class="container-fluid px-5">
     {% for event in events %}
-        <div class="p-5 mb-5 border">
-            <div id="posted-by" class="mb-5">
+        <div class="p-3 m-5 border">
+            <div id="posted-by" class="mb-5 card-header border">
                 {% if event.user.image %}
                     <img src="{{ event.user.image.url }}" alt="My Avi">
                 {% else %}
                     <img src="/static/images/anon.png" alt="anon">
                 {% endif %}
                 <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
-                <span class="mx-1"> - {{ event.date_posted|timesince }} ago</span>
+                <span class="mx-1"> &sdot;&nbsp; {{ event.date_posted|timesince }} ago</span>
             </div>
 
             {% if event.past_event %}
                 <p class="badge bg-secondary" id="badge"> Past evnt </p> 
             {% endif %}
             
-            <div>
+            <div class="mx-5 px-5">
                 {% if event.image %}
                     <img src="{{ event.image.url }}" alt="" class="mb-5"> 
                 {% endif %} 
                 <br>
-                <a href="{{ event.get_absolute_url }}"> {{event}} </a>
+                <a href="{{ event.get_absolute_url }}"> {{ event }} </a>
                 <p> {{ event.description|truncatewords:20|safe }} </p> 
             </div>
         </div>
