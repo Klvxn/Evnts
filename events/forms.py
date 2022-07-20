@@ -1,16 +1,10 @@
 from django import forms
 from django.utils import timezone
 
-from .models import EventList, Event, Comment
+from .models import Event, Comment
 
 
 # Forms
-class AddEventListForm(forms.ModelForm):
-    class Meta:
-        model = EventList
-        fields = ("name",)
-
-
 class AddEventForm(forms.ModelForm):
     date_of_event = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={"placeholder": "YYYY-MM-DD / hh-mm-ss"}),
@@ -18,7 +12,7 @@ class AddEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ("user", "slug")
+        exclude = ("user", "slug", "user_attending")
 
     def clean_date(self):
         date_of_event = self.cleaned_data["date"]
@@ -36,7 +30,7 @@ class EditEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ("user", "slug")
+        exclude = ("user", "slug", "user_attending")
 
 
 class CommentForm(forms.ModelForm):

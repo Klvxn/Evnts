@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: black;
 }
 
 :root {
@@ -52,7 +53,7 @@ form#searchbar {
 h2 {
     font-family: sans-serif;
     margin-bottom: 2.5rem;
-    display: inline-block;
+    /* display: inline-block; */
 }
 
 

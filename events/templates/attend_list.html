@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<h2> Evnts in your Attend-list </h2>
+{% endblock %}
+
+
+{% block content %}
+{% for event in events %}
+    {{ event }}
+{% endfor %}
+{% endblock %}
+
+
+
+
+
+{% block footer %}{% endblock %}

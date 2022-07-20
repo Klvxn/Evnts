@@ -1,43 +1,44 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
+from django.utils.decorators import method_decorator
 from django.views import View
+from pydantic import PostgresDsn
 
 from taggit.models import Tag
 
 from .forms import AddEventForm, CommentForm, EditEventForm
-from .models import Category, Event, EventList, Comment
+from .models import Category, Event, Comment
 
 
 # Create your views here.
-def get_event(slug):
+def get_event(slug: str) -> Event:
     queryset = get_object_or_404(Event, slug=slug, make_private=False)
     return queryset
 
-
-def get_private_event(slug):
+def get_private_event(slug: str) -> Event:
     queryset = get_object_or_404(Event, slug=slug, make_private=True)
     return queryset
 
 
 class IndexView(View):
 
-    template_name = "index.html"
+    template_name: str = "index.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponse:
         return render(request, self.template_name)
 
 
 # Category views.
 class CategoryListView(View):
 
-    template_name = "categories.html"
+    template_name: str = "categories.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest):
         categories = Category.objects.all()
         events = []
         for category in categories:
@@ -51,9 +52,9 @@ class CategoryListView(View):
 
 class CategoryDetailView(View):
 
-    template_name = "category.html"
+    template_name: str = "category.html"
 
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug):
         category = Category.objects.get(slug=slug)
         if request.user.is_authenticated:
             queryset = (
@@ -69,9 +70,9 @@ class CategoryDetailView(View):
 # Event Views
 class EventsListView(View):
 
-    template_name = "homepage.html"
+    template_name: str = "homepage.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest):
         events = Event.public.all().order_by("-date_posted")
         context = {"events": events}
         return render(request, self.template_name, context)
@@ -80,9 +81,9 @@ class EventsListView(View):
 class EventDetailView(View):
 
     form_class = CommentForm
-    template_name = "event_detail.html"
+    template_name: str = "event_detail.html"
 
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug):
         event = get_event(slug)
         tags = event.tags.all()
         related_events = (
@@ -101,15 +102,20 @@ class EventDetailView(View):
         }
         return render(request, self.template_name, context)
 
-    def post(self, request, slug):
+    @method_decorator(login_required)
+    def post(self, request: HttpRequest, slug):
         event = get_event(slug)
-
-        event_list = []
+        
         if request.POST[str(event.id)] == "Add to attend-list":
-            event_list.append((event.id, request.user.username))
-            print (event_list)
+            event.user_attending.add(request.user)
+            print(event.user_attending.all())
+            # count = event.user_attending.count()
             return HttpResponse("This evnt has been added to your evnt list.")
-
+        elif request.POST[str(event.id)] == "Remove from attend-list":
+            event.user_attending.remove(request.user)
+            print(event.user_attending.all())
+            return HttpResponse("This evnt has been removed from your attend-list")
+            
         form = self.form_class(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -118,28 +124,11 @@ class EventDetailView(View):
             return redirect(event)
 
 
-class EventListView(LoginRequiredMixin, View):
-
-    template_name = "event_list.html"
-
-    def get(self, request, slug):
-        try:
-            event_list = get_object_or_404(EventList, slug=slug)
-        except ObjectDoesNotExist:
-            return HttpResponse("Your List is empty")
-        if request.user == event_list.user:
-            events = event_list.event_set.all()
-        else:
-            return HttpResponseForbidden()
-        context = {"event_list": event_list, "events": events}
-        return render(request, self.template_name, context)
-
-
 class EventTagView(View):
 
-    template_name = "event_tag.html"
+    template_name: str = "event_tag.html"
 
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug):
         events = Event.objects.filter(tags__slug__contains=slug)
         tag = get_object_or_404(Tag, slug=slug)
         context = {"events": events, "tag": tag}
@@ -148,31 +137,27 @@ class EventTagView(View):
 
 class ManageEventsView(LoginRequiredMixin, View):
 
-    template_name = "manage_events.html"
+    template_name: str = "manage_events.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest):
         return render(request, self.template_name)
 
 
 class PrivateEventsView(LoginRequiredMixin, View):
 
-    template_name = "private_events.html"
+    template_name: str = "private_events.html"
 
-    def get(self, request, *args):
+    def get(self, request: HttpRequest):
         my_events = Event.private.filter(user=request.user)
-        try:
-            event = get_event(slug=args)
-        except ObjectDoesNotExist:
-            pass
         context = {"my_events": my_events}
         return render(request, self.template_name, context)
 
 
 class PrivateEventDetailView(LoginRequiredMixin, View):
 
-    template_name = "private_event_detail.html"
+    template_name: str = "private_event_detail.html"
 
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug):
         event = get_private_event(slug)
         if request.user == event.user:
             event = Event.private.get(user=request.user, name=event)
@@ -193,14 +178,14 @@ class PrivateEventDetailView(LoginRequiredMixin, View):
 class AddEventView(LoginRequiredMixin, View):
 
     form_class = AddEventForm
-    template_name = "add_event.html"
+    template_name: str = "add_event.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest):
         form = self.form_class()
         context = {"form": form}
         return render(request, self.template_name, context)
 
-    def post(self, request):
+    def post(self, request: HttpRequest):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             event = form.save(commit=False)
@@ -219,9 +204,9 @@ class AddEventView(LoginRequiredMixin, View):
 class EditEventView(LoginRequiredMixin, View):
 
     form_class = EditEventForm
-    template_name = "edit_event.html"
+    template_name: str = "edit_event.html"
 
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug):
         event = get_object_or_404(Event, slug=slug)
         if request.user.is_superuser or request.user == event.user:
             form = self.form_class(instance=event)
@@ -230,7 +215,7 @@ class EditEventView(LoginRequiredMixin, View):
         context = {"form": form, "event": event}
         return render(request, self.template_name, context)
 
-    def post(self, request, slug):
+    def post(self, request: HttpRequest, slug):
         event = get_object_or_404(Event, slug=slug)
         if request.user.is_superuser or request.user == event.user:
             form = self.form_class(
@@ -250,11 +235,12 @@ class EditEventView(LoginRequiredMixin, View):
         context = {"form": form, "event": event}
         return render(request, self.template_name, context)
 
+
 class DeleteEventView(LoginRequiredMixin, View):
 
-    template_name = "delete_event.html"
+    template_name: str = "delete_event.html"
 
-    def get(self, request, slug):
+    def get(self, request: HttpRequest, slug):
         event = get_object_or_404(Event, slug=slug)
         if request.user.is_superuser or request.user == event.user:
             context = {"event": event}
@@ -262,7 +248,7 @@ class DeleteEventView(LoginRequiredMixin, View):
         else:
             return HttpResponseForbidden()
 
-    def post(self, request, slug):
+    def post(self, request: HttpRequest, slug) -> HttpResponse:
         event = get_object_or_404(Event, slug=slug)
         if request.user.is_superuser or request.user == event.user:
             event.delete()
@@ -273,9 +259,9 @@ class DeleteEventView(LoginRequiredMixin, View):
 
 class SearchEventView(View):
 
-    template_name = "search_events.html"
+    template_name: str = "search_events.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponse:
         query = request.GET.get("search")
         print(query)
         if query == ("" or " "):
@@ -283,4 +269,14 @@ class SearchEventView(View):
         else:
             search_results = Event.objects.filter(name__contains=query)
         context = {"events": search_results}
+        return render(request, self.template_name, context)
+
+
+class Attendlist(LoginRequiredMixin, View):
+    
+    template_name: str = "attend_list.html"
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        events = Event.public.filter(user_attending=request.user)
+        context = {"events": events}
         return render(request, self.template_name, context)

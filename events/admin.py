@@ -1,17 +1,11 @@
 from django.contrib import admin
 
-from .models import Category, EventList, Event, Comment
+from .models import Category, Event, Comment
 
 
 # Register your models here.
 @admin.register(Category)
 class CatergoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
-
-
-@admin.register(EventList)
-class EventList(admin.ModelAdmin):
-    list_display = ("name", "user")
     prepopulated_fields = {"slug": ("name",)}
 
 
@@ -21,7 +15,7 @@ class CommentInline(admin.TabularInline):
 
 
 @admin.register(Event)
-class Event(admin.ModelAdmin):
+class EventAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "category",
@@ -39,6 +33,6 @@ class Event(admin.ModelAdmin):
 
 
 @admin.register(Comment)
-class Comment(admin.ModelAdmin):
+class CommentAdmin(admin.ModelAdmin):
     list_display = ("username", "comment", "event")
     list_filter = ("event",)

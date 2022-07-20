@@ -5,7 +5,6 @@
 
 {% block title %}
 <h2> Evnt: {{ event.name }} </h2>  
-<br> {{ event.id }} 
 {% endblock title %}
 
 
@@ -51,14 +50,18 @@
         <p> Venue: {{ event.venue }} </p>
         <p> Ticket Price: {% if event.ticket_price %} ${{ event.ticket_price }} {% else %} Free {% endif %} </p>
 
-        {% if request.user.is_authenticated %}
-            <div class="text-center">
-                <form action="" method="post" class="form-group">
-                    {% csrf_token %}
-                    <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Add to attend-list">
-                </form>
-            </div>
-        {% endif %}
+        <div class="text-center">
+            <form action="" method="post" class="form-group" hx-post="." hx-swap="OuterHTML">
+                {% csrf_token %}
+                {% if request.user in event.user_attending.all %}
+                    <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Remove from attend-list">
+                {% else %}
+                    <input type="submit" name="{{ event.id }}" class="btn btn-primary" value="Add to attend-list">
+                {% endif %}
+            </form>
+        </div>
+           
+        {{ event.user_attending.count }} users are attending this event.
 
         {% if user.is_superuser or user == event.user %}
             <p class="event-buttons">

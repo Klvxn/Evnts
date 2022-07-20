@@ -43,24 +43,6 @@ class Category(models.Model):
         return reverse("events:category-detail", kwargs={"slug": self.slug})
 
 
-class EventList(models.Model):
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    name = models.CharField(max_length=20, default="My Event list")
-    slug = models.SlugField(max_length=25, default="my-event-list")
-
-    class Meta:
-        verbose_name = "Event List"
-
-    def __str__(self):
-        return f"{self.name}"
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-
 class PrivateEventManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(make_private=True)
@@ -71,13 +53,20 @@ class PublicEventManager(models.Manager):
         return super().get_queryset().filter(make_private=False)
 
 
+class AttendListManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(attending=True)
+
+
 class Event(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True, null=True)
-    # event_list = models.ForeignKey(
-        # EventList, on_delete=models.PROTECT, null=True, blank=True
-    # )
+    attending = models.BooleanField(null=True, default=False, help_text='Will you attend this event?')
+    user_attending = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="user_attend"
+    )
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="events"
     )
@@ -101,6 +90,7 @@ class Event(models.Model):
     tags = TaggableManager()
     public = PublicEventManager()
     private = PrivateEventManager()
+    attend = AttendListManager()
     
     def __str__(self):
         return f"{self.name}"
@@ -128,6 +118,7 @@ class Comment(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="comments")
     username = models.CharField(max_length=20)
     comment = models.TextField()
+    reply = models.ForeignKey("Comment", on_delete=models.CASCADE, related_name="replies", null=True)
     date_added = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

@@ -2,12 +2,12 @@ from django.urls import path
 
 from .views import (
     AddEventView,
+    Attendlist,
     CategoryDetailView,
     CategoryListView,
     DeleteEventView,
     EditEventView,
     EventDetailView,
-    EventListView,
     EventsListView,
     EventTagView,
     IndexView,
@@ -34,5 +34,5 @@ urlpatterns = [
     path("events/<slug:slug>/delete-event/", DeleteEventView.as_view(), name="delete-event"),
     path("events/<slug:slug>/edit-event/", EditEventView.as_view(), name="edit-event"),
     path("events/", SearchEventView.as_view(), name="search"),
-    path("<slug:slug>/", EventListView.as_view(), name="event-list"),
+    path("attend-list/", Attendlist.as_view(), name="search"),
 ]
