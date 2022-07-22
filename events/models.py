@@ -23,9 +23,9 @@ class Category(models.Model):
         ("Sport Event", "Sport Event"),
         ("Others", "Others"),
     ]
-    name = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    name = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     description = models.TextField(null=True, blank=True)
-    slug = models.SlugField(max_length=50, null=True)
+    slug = models.SlugField(max_length=20, null=True)
 
     class Meta:
         ordering = ("name",)
@@ -51,11 +51,6 @@ class PrivateEventManager(models.Manager):
 class PublicEventManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(make_private=False)
-
-
-class AttendListManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(attending=True)
 
 
 class Event(models.Model):
@@ -85,8 +80,10 @@ class Event(models.Model):
     tags = TaggableManager()
     public = PublicEventManager()
     private = PrivateEventManager()
-    attend = AttendListManager()
     
+    class Meta:
+        ordering = ('-date_posted',)
+
     def __str__(self):
         return f"{self.name}"
 
@@ -114,7 +111,7 @@ class Comment(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="comments")
     username = models.CharField(max_length=20)
     comment = models.TextField()
-    reply = models.ForeignKey("Comment", on_delete=models.CASCADE, related_name="replies", null=True)
+    reply = models.ForeignKey("self", on_delete=models.CASCADE, related_name="replies", null=True)
     date_added = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

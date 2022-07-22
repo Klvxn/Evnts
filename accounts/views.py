@@ -9,8 +9,8 @@ from django.urls import reverse_lazy
 
 from events.models import Event
 
-from .models import CustomUser
 from .forms import CustomUserCreationForm, CustomUserEditForm
+from .models import CustomUser
 
 
 # Create your views here.

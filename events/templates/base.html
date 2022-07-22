@@ -68,9 +68,12 @@
         </nav>
         <br>
         {% block search %}
-        <form action="{% url 'events:search' %}" id="searchbar" method="get">
-            <input name="search" placeholder="Search for evnts." type="search" class="form-control m-1" aria-label="Search">
-        </form>
+        <div class="py-4" id="searchbar">
+            <form action="{% url 'events:search' %}" method="get" hx-get="{% url 'events:search' %}" hx-target=".error" >
+                <input name="search" placeholder="Search for evnts." type="search" class="form-control m-1" aria-label="Search">
+            </form>
+            <p class="text-danger error"></p>
+        </div>
         {% endblock %}
         <main class="container-fluid p-4">
             {% block title %} {% endblock %}

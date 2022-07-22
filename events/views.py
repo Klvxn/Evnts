@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 from django.utils.decorators import method_decorator
@@ -59,9 +59,9 @@ class CategoryDetailView(View):
             queryset = (
                 category.events(manager="public").all()
                 | category.events(manager="private").filter(user=request.user)
-            ).order_by("-date_posted")
+            )
         else:
-            queryset = category.events(manager="public").all().order_by("-date_posted")
+            queryset = category.events(manager="public").all()
         context = {"queryset": queryset, "category": category}
         return render(request, self.template_name, context)
 
@@ -72,7 +72,7 @@ class EventsListView(View):
     template_name: str = "homepage.html"
 
     def get(self, request: HttpRequest):
-        events = Event.public.all().order_by("-date_posted")
+        events = Event.public.all()
         context = {"events": events}
         return render(request, self.template_name, context)
 
@@ -86,7 +86,7 @@ class EventDetailView(View):
         event = get_event(slug)
         tags = event.tags.all()
         related_events = (
-            Event.objects.filter(tags__id__in=tags).exclude(id=event.id).order_by("date_posted").distinct()
+            Event.public.filter(tags__id__in=tags).exclude(id=event.id).distinct()
         )
         form = self.form_class()
         comments = event.comments.all()
@@ -156,8 +156,8 @@ class PrivateEventDetailView(LoginRequiredMixin, View):
         if request.user == event.user:
             event = Event.private.get(user=request.user, name=event)
             tags = event.tags.all()
-            related_events =(
-                Event.objects.filter(tags__id__in=tags).exclude(id=event.id).order_by("date_posted").distinct()
+            related_events = (
+                Event.objects.filter(tags__id__in=tags, user=request.user, make_private=False).exclude(id=event.id).distinct()
             )
         else:
             return HttpResponseForbidden()
@@ -256,9 +256,10 @@ class SearchEventView(View):
     template_name: str = "search_events.html"
 
     def get(self, request: HttpRequest) -> HttpResponse:
+        print(request.GET)
         query = request.GET.get("search")
-        if query == ("" or " "):
-            raise ValidationError("Enter a value")
+        if not query:
+            return HttpResponse("The entry you made is invalid :( ")
         else:
             if request.user.is_authenticated:
                 search_results = (
@@ -267,8 +268,7 @@ class SearchEventView(View):
                 )
             else:
                 search_results = Event.public.filter(name__icontains=query)
-        results = search_results.order_by("-date_posted")
-        context = {"search_results": results, "query": query}
+        context = {"search_results": search_results, "query": query}
         return render(request, self.template_name, context)
 
 

@@ -27,7 +27,7 @@
                 {% if events.image %}
                     <img src="{{ events.image.url }}" alt=""> 
                 {% endif %} 
-                <p> <a href="{{ events.get_absolute_url_for_private_events }}"> {{ events }} </a> <br>
+                <p> <a href="{{ events.get_absolute_url }}"> {{ events }} </a> <br>
                 {{ events.description|truncatewords:30|safe }}  <br>
             </div>  
         </div>

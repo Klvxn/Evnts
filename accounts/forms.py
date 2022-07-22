@@ -11,13 +11,7 @@ class CustomUserCreationForm(UserCreationForm):
         required=True, 
         widget=forms.TextInput(),
     )
-    password1 = forms.CharField(
-        label="Password",
-        min_length=8, 
-        required=True, 
-        widget=forms.PasswordInput(),
-        help_text="Password should be unique and contain at least 8 characters"
-    )
+   
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = (

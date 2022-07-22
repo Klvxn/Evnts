@@ -20,7 +20,7 @@ a {
     text-decoration: none;
 }
 
-form#searchbar {
+#searchbar {
     width: 30%;
     float: right;
 }
@@ -137,7 +137,7 @@ div.image {
 }
 
 form.cs input, textarea {
-    width: 29rem;
+    width: 25rem;
 }
 
 textarea {

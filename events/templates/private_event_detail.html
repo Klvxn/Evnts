@@ -21,25 +21,29 @@
         {% endif %}
     </div>
 
-    <p class="badge bg-danger float-right">Private evnt</p>
+    <span class="badge bg-danger">Private evnt</span>
 
     <div id="event">
-        {% if tags %}
-            <p> Tags:
-                {% for tag in tags %}
-                    <a href="{% url 'events:event-tag' tag.slug %}"> {{ tag }}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
-
-        Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> <br>
-        {% if event.image %} <img src="{{ event.image.url }}" alt=""> {% endif %}  <br>
-        <p> {{ event.description|safe }} </p>
-        {% if event.host %} <p> Host: {{ event.host|title }} </p> {% endif %} 
-        {% if event.special_guests %} <p> Special guests: {{ event.special_guests }} </p> {% endif %} 
-        <p> Date of Evnt: {{ event.date_of_event }} </p>
-        <p> Venue: {{ event.venue }} </p>
-        <p> Ticket Price: {% if event.ticket_price %} ${{ event.ticket_price }} {% else %} Free {% endif %} </p>
+        <div>
+            <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
+            {% if tags %}
+                <p> Tags:
+                    {% for tag in tags %}
+                        <a href="{% url 'events:event-tag' tag.slug %}"> {{ tag }}</a>
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div>
+        
+        <div class="py-2">
+            {% if event.image %} <div class="image"> <img src="{{ event.image.url }}" alt=""> {% endif %} </div>
+            <p> {{ event.description|safe }} </p>
+            {% if event.host %} <p> Host: {{ event.host|title }} </p> {% endif %} 
+            {% if event.special_guests %} <p> Special guests: {{ event.special_guests }} </p> {% endif %} 
+            <p> Date of Evnt: {{ event.date_of_event }} </p>
+            <p> Venue: {{ event.venue }} </p>
+            <p> Ticket Price: {% if event.ticket_price %} ${{ event.ticket_price }} {% else %} Free {% endif %} </p>
+        </div>
 
         {% comment %} <form id="hmm" action="" method="post" class="mt-5" hx-trigger="click" hx-post="." hx-target="#hmm">
             {% csrf_token %}
@@ -47,10 +51,12 @@
         </form> {% endcomment %}
 
         {% if user.is_superuser or user == event.user %}
-            <p class="event-buttons mt-5">
-                <a class="btn btn-outline-primary px-2" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
-                <a class="btn btn-outline-danger px-2" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
-            </p>
+            <div class="text-center m-0 p-0">
+                <p class="event-buttons">
+                    <a class="btn btn-outline-primary px-2 py-1" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
+                    <a class="btn btn-outline-danger px-2 py-1" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
+                </p>
+            </div>
         {% endif %}
     </div>
 

@@ -4,7 +4,7 @@
 
 
 {% block title %}
-<h2> Evnt: {{ event.name }} </h2>  
+<h2> Evnt: {{ event.name }} </h2>
 {% endblock title %}
 
 
@@ -37,15 +37,17 @@
             <span> {{ event.users_attending.count }} user{{ event.users_attending.count|pluralize }} {{ event.users_attending.count|pluralize:"is, are"}} attending this evnt.</span>
         </div>
 
-        <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
-        {% if tags %}
-            <p> Tags:
-                {% for tag in tags %}
-                    <a href="{% url 'events:event-tag' tag.slug %}"> {{ tag }}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
-        
+        <div>
+            <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
+            {% if tags %}
+                <p> Tags:
+                    {% for tag in tags %}
+                        <a href="{% url 'events:event-tag' tag.slug %}"> {{ tag }}</a>
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div>
+
         <div class="py-2">
             {% if event.image %} <div class="image"> <img src="{{ event.image.url }}" alt=""> {% endif %} </div>
             <p> {{ event.description|safe }} </p>
@@ -87,6 +89,9 @@
                 <p class="comments p-1">
                     <span style="font-weight:bold;"> {{ comment.username }}: </span> <br>
                     <span> {{ comment.comment }} <br> <i>  {{ comment.date_added|timesince }} ago </i> </span>
+                    {% for reply in comments %}
+                        {{ reply }}
+                    {% endfor %}
                 </p>
             {% endfor %} 
             <hr>
@@ -103,10 +108,7 @@
             <textarea id="comment" name="comment" required> </textarea> </p>
         <button class="btn btn-outline-success py-1 px-2 mp-3" type="submit"> Post comment </button>
     </form>
-    
-    
-    </div>
-    
+
 
 {% if related_events %}
     <hr>
