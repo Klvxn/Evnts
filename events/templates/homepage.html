@@ -42,6 +42,19 @@
                 <a href="{{ event.get_absolute_url }}"> {{ event }} </a>
                 <p> {{ event.description|truncatewords:20|safe }} </p> 
             </div>
+            
+            {% if event.users_attending.count %}
+                <div class="card-footer border">
+                    {% for users in event.users_attending.all %}
+                        {% if users.image %}
+                            <a href="{{ users.get_absolute_url }}"><img src="{{ users.image.url }}" alt=""></a>
+                        {% else %}
+                            <p> {{ users.username }} </p>
+                        {% endif %}
+                    {% endfor %}
+                    <span> &nbsp;{{ event.users_attending.count|pluralize }} {{ event.users_attending.count|pluralize:"is, are"}} attending this evnt.</span>
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 </div> 

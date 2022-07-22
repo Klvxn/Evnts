@@ -62,17 +62,12 @@ class Event(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True, null=True)
-    attending = models.BooleanField(null=True, default=False, help_text='Will you attend this event?')
-    user_attending = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="user_attend"
-    )
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="events"
-    )
+    attending = models.BooleanField(default=False, help_text="Will you attend this evnt?")
+    users_attending = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_attend")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="events")
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to="media/event imgs", null=True, blank=True)
-    slug = models.SlugField(null=True, blank=True, unique=True)
+    slug = models.SlugField(null=True, unique=True)
     description = RichTextField()
     host = models.CharField(max_length=50, blank=True)
     special_guests = models.CharField(max_length=100, blank=True)
@@ -81,7 +76,7 @@ class Event(models.Model):
     make_private = models.BooleanField(
         verbose_name="Make Private?",
         help_text="Do you want to keep this evnt from others?",
-        default=False,
+        default=False
     )
     ticket_price = models.PositiveIntegerField(null=True)
 
@@ -99,12 +94,13 @@ class Event(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+        if self.attending:
+            self.users_attending.add(self.user)
 
     def get_absolute_url(self):
+        if self.make_private:
+            return reverse("events:private-event-detail", kwargs={"slug": self.slug})
         return reverse("events:event-detail", kwargs={"slug": self.slug})
-
-    def get_absolute_url_for_private_events(self):
-        return reverse("events:private-event-detail", kwargs={"slug": self.slug})
 
     @property
     def past_event(self):

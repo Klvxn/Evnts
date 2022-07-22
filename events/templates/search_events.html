@@ -1,20 +1,19 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
-<h1>Search results for  {{ query }}</h1>
+<h2> Search results for: <i> "{{ query }}" </i></h2>
 {% endblock %}
+
 
 {% block content %}
-
-{% for event in events %}
+{% for event in search_results %}
     <div class="events-container">
-        <a href="{{ event.get_absolute_url }}"> {{ event }} </a> <br>
+        <a href="{{ event.get_absolute_url }}"> {{ event }} </a> {% if event.make_private %} Private {% endif %}
     </div>
 {% endfor %}
-
-
 {% endblock %}
 
-{% block footer %}
 
+{% block footer %}
 {% endblock %}

@@ -34,5 +34,5 @@ urlpatterns = [
     path("events/<slug:slug>/delete-event/", DeleteEventView.as_view(), name="delete-event"),
     path("events/<slug:slug>/edit-event/", EditEventView.as_view(), name="edit-event"),
     path("events/", SearchEventView.as_view(), name="search"),
-    path("attend-list/", Attendlist.as_view(), name="search"),
+    path("attend-list/", Attendlist.as_view(), name="attend-list"),
 ]

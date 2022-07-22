@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
-<h1 id="title">Delete account </h1>
+<h2> Delete account </h2>
 {% endblock %}
 
+
 {% block content %}
-<form action="" method="post" style="font-size: 1.5rem;">
+<h3> {{ user.username|title }} </h3>
+<form action="" method="post">
     {% csrf_token %}
-    {{user.username|title}} <br>
-   <p> Are you sure you want to delete your account? This action can not be undone! </p> <br>
-   <input type="submit" value="Delete" class="btn btn-outline-danger py-1">
-    <a href="{{user.get_absolute_url}}" class="btn btn-outline-dark mx-5 p-1">Cancel</a>
+    <p> Are you sure you want to delete your account? This action can not be undone! </p> 
+    <button class="btn btn-danger py-2 px-3"> Delete </button>
+    <a href="{{ user.get_absolute_url }}" class="btn btn-outline-dark mx-5 py-0">Cancel</a>
 </form>
 {% endblock %}
+
 
 {% block footer %} {% endblock %}

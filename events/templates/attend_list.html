@@ -7,13 +7,19 @@
 
 
 {% block content %}
-{% for event in events %}
-    {{ event }}
-{% endfor %}
+<div class="container-fluid">
+    <div>
+        <p> Evnts in your attend-list are evnts you want to attend. </p>
+    </div>
+
+    {% if events %}
+        {% for event in events %}
+            {{ event }} <br>
+        {% endfor %}
+    {% endif %}
+</div>
+
 {% endblock %}
-
-
-
 
 
 {% block footer %}{% endblock %}

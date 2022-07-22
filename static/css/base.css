@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: black;
+    background-color: whitesmoke;
 }
 
 :root {
@@ -103,6 +103,11 @@ figcaption {
     width: 20rem;
 }
 
+.container-fluid .card-footer img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+}
 
 /* Events detail page. */
 div.image {
@@ -123,7 +128,6 @@ div.image {
 
 .comments {
     border: 1px solid darkgray;
-    /* margin: 0 auto; */
     width: fit-content;
 }
 

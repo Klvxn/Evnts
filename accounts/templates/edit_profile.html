@@ -1,25 +1,28 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load bootstrap4 %}
 
 
 {% block title %}
-<h2 id="title" > Edit your profile </h2>
+<h2> Edit your profile </h2>
 {% endblock title %}
 
 
 {% block content %}
 {% if messages %}
-    <div class="error-messages bg-danger">
-        {% for messages in messages %}
-            {{messages}} <a href="" class="close">x</a>
+    <div class="alert alert-danger w-75 m-5" role="alert">
+        {% for message in messages %}
+            <span> {{ message }} </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         {% endfor %}
     </div>
-{% endif %}    
-<form enctype="multipart/form-data" method="post" action="" class="form-group">
-    {% csrf_token %}
-    {{ form|crispy }}
+{% endif %}   
 
-    <p> <input type="submit" value="Save changes" class="btn btn-primary"> </p>
+<form enctype="multipart/form-data" method="post" action="" class="form-control">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button class="btn btn-primary">Save changes</button>
 </form>
 {% endblock content %}
 

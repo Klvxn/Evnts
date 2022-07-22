@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.urls import reverse
 
 
@@ -7,12 +7,11 @@ from django.urls import reverse
 class CustomUser(AbstractUser):
 
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
     image = models.ImageField(
         verbose_name="Profile picture",
         upload_to="media/profile pics",
-        blank=True,
         null=True,
     )
     date_of_birth = models.DateField(blank=True, null=True)

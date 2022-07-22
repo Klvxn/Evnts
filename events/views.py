@@ -7,12 +7,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 from django.utils.decorators import method_decorator
 from django.views import View
-from pydantic import PostgresDsn
 
 from taggit.models import Tag
 
 from .forms import AddEventForm, CommentForm, EditEventForm
-from .models import Category, Event, Comment
+from .models import Category, Event
 
 
 # Create your views here.
@@ -90,14 +89,12 @@ class EventDetailView(View):
             Event.objects.filter(tags__id__in=tags).exclude(id=event.id).order_by("date_posted").distinct()
         )
         form = self.form_class()
-        comment_set = event.comments.all()
+        comments = event.comments.all()
         context = {
             "event": event,
-            "events": Event,
-            "comment": Comment,
             "tags": tags,
             "related_events": related_events[:4],
-            "comments": comment_set,
+            "comments": comments,
             "form": form,  
         }
         return render(request, self.template_name, context)
@@ -105,23 +102,20 @@ class EventDetailView(View):
     @method_decorator(login_required)
     def post(self, request: HttpRequest, slug):
         event = get_event(slug)
-        
-        if request.POST[str(event.id)] == "Add to attend-list":
-            event.user_attending.add(request.user)
-            print(event.user_attending.all())
-            # count = event.user_attending.count()
+        event_action = request.POST.get(str(event.id))
+        if event_action == "Add to attend-list":
+            event.users_attending.add(request.user)
             return HttpResponse("This evnt has been added to your evnt list.")
-        elif request.POST[str(event.id)] == "Remove from attend-list":
-            event.user_attending.remove(request.user)
-            print(event.user_attending.all())
+        elif event_action == "Remove from attend-list":
+            event.users_attending.remove(request.user)
             return HttpResponse("This evnt has been removed from your attend-list")
-            
+      
         form = self.form_class(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.event = get_event(slug)
             comment.save()
-            return redirect(event)
+            return redirect(event.get_absolute_url())
 
 
 class EventTagView(View):
@@ -208,7 +202,7 @@ class EditEventView(LoginRequiredMixin, View):
 
     def get(self, request: HttpRequest, slug):
         event = get_object_or_404(Event, slug=slug)
-        if request.user.is_superuser or request.user == event.user:
+        if request.user == event.user:
             form = self.form_class(instance=event)
         else:
             return HttpResponseForbidden()
@@ -217,7 +211,7 @@ class EditEventView(LoginRequiredMixin, View):
 
     def post(self, request: HttpRequest, slug):
         event = get_object_or_404(Event, slug=slug)
-        if request.user.is_superuser or request.user == event.user:
+        if request.user == event.user:
             form = self.form_class(
                 instance=event, data=request.POST, files=request.FILES
             )
@@ -227,7 +221,7 @@ class EditEventView(LoginRequiredMixin, View):
                 edit.save()
                 form.save_m2m()
                 messages.success(request, "Changes saved!")
-                return redirect(edit)
+                return redirect(event.get_absolute_url())
             else:
                 messages.error(request, "Error while updating evnt.")
         else:
@@ -263,12 +257,18 @@ class SearchEventView(View):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         query = request.GET.get("search")
-        print(query)
         if query == ("" or " "):
             raise ValidationError("Enter a value")
         else:
-            search_results = Event.objects.filter(name__contains=query)
-        context = {"events": search_results}
+            if request.user.is_authenticated:
+                search_results = (
+                    Event.private.filter(name__contains=query, user=request.user)
+                    | Event.public.filter(name__icontains=query)
+                )
+            else:
+                search_results = Event.public.filter(name__icontains=query)
+        results = search_results.order_by("-date_posted")
+        context = {"search_results": results, "query": query}
         return render(request, self.template_name, context)
 
 
@@ -276,7 +276,7 @@ class Attendlist(LoginRequiredMixin, View):
     
     template_name: str = "attend_list.html"
 
-    def get(self, request: HttpRequest) -> HttpResponse:
-        events = Event.public.filter(user_attending=request.user)
+    def get(self, request: HttpRequest, *slug: str) -> HttpResponse:
+        events = Event.public.filter(users_attending=request.user)
         context = {"events": events}
         return render(request, self.template_name, context)

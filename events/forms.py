@@ -12,7 +12,7 @@ class AddEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ("user", "slug", "user_attending")
+        exclude = ("user", "slug", "users_attending")
 
     def clean_date(self):
         date_of_event = self.cleaned_data["date"]
@@ -30,7 +30,7 @@ class EditEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ("user", "slug", "user_attending")
+        exclude = ("user", "slug", "users_attending")
 
 
 class CommentForm(forms.ModelForm):

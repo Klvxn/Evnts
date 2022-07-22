@@ -5,14 +5,18 @@ from model_bakery import baker
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
+from django.http import HttpRequest
 
 from accounts.models import CustomUser
 
+from .forms import AddEventForm
 from .models import Category, Event, Comment
 from .views import get_event
 
 
 # Create your tests here.
+request = HttpRequest()
+
 class BaseSetUp(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -252,7 +256,7 @@ class AddEventViewTest(BaseSetUp):
 
     def test_add_event(self):
         self.client.login(username="testuser", password="password1234")
-        data = {
+        request.POST = {
             "user": self.user,
             "category": self.category,
             "name": "test event 2",
@@ -262,11 +266,14 @@ class AddEventViewTest(BaseSetUp):
             "ticket_price": "12",
             "tags": "test",
         }
-        response = self.client.post("/add-event/",data=data)
-        print(response.content)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Your evnt was not posted. Try again.")
-        self.assertContains(response, "This field is required")
+
+        form = AddEventForm(request.POST)
+        assert form.is_valid() == True
+        # response = self.client.post("/add-event/",data=data)
+        # print(response.content)
+        # self.assertEqual(response.status_code, 200)
+        # self.assertContains(response, "Your evnt was not posted. Try again.")
+        # self.assertContains(response, "This field is required")
 
 
 class EditEventViewTest(BaseSetUp):

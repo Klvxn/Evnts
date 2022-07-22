@@ -2,16 +2,19 @@
 
 
 {% block title %}
-<h3 id="title"> {{ user.username|title }} </h3>
+<h2> {{ user.username|title }} </h2>
 {% endblock title %}    
 
 
 {% block content %}
 <div class="user my-5">
     {% if messages %}
-        <div class="success-messages text-success">
-            {% for messages in messages %}
-                {{ messages }} <a href="" style="color:green;" class="close">x</a>
+        <div class="alert alert-success w-75 m-5" role="alert">
+            {% for message in messages %}
+                <span> {{ message }} </span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             {% endfor %}
         </div>
     {% endif %}
