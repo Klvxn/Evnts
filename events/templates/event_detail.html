@@ -30,12 +30,12 @@
                 <img src="/static/images/anon.png" alt="anon" class="m-0">
             {% endif %}
             <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
-            <span class="mx-1" style="font-size: 1rem;"> &sdot;&nbsp; {{ event.date_posted|timesince }} ago</span>
+            <span> &sdot;&nbsp; {{ event.date_posted|timesince }} ago </span> 
+            <div class="badge bg-primary py-1" id="badge">
+                <p> {{ event.users_attending.count }} user{{ event.users_attending.count|pluralize }} {{ event.users_attending.count|pluralize:"is, are"}} attending this evnt. </p>
+            </div>
         </div>
 
-        <div class="badge bg-primary py-1" id="badge">
-            <span> {{ event.users_attending.count }} user{{ event.users_attending.count|pluralize }} {{ event.users_attending.count|pluralize:"is, are"}} attending this evnt.</span>
-        </div>
 
         <div>
             <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
@@ -59,23 +59,25 @@
         </div>
 
         <p class="note badge bg-success"></p>
-        <div class="text-center p-5">
-            <form action="" method="post" hx-post="." hx-target=".note" hx-swap="OuterHTML">
-                {% csrf_token %}
-                {% if request.user in event.users_attending.all %}
-                    <p class="badge bg-warning">This evnt is already in your attend-list.</p><br>
-                    <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Remove from attend-list">
-                {% else %}
-                    <input type="submit" name="{{ event.id }}" class="btn btn-primary" value="Add to attend-list">
-                {% endif %}
-            </form>
+        <div class="text-center p-5" style="margin: 0 auto;">
+                <form action="" method="post" hx-post="." hx-target=".note" hx-swap="OuterHTML">
+                    {% csrf_token %}
+                    {% if request.user in event.users_attending.all %}
+                        <p class="badge bg-warning">This evnt is already in your attend-list.</p><br>
+                        <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Remove from attend-list">
+                    {% else %}
+                        <input type="submit" name="{{ event.id }}" class="btn btn-primary" value="Add to attend-list">
+                    {% endif %}
+                </form>
+           
+            
         </div> 
 
         {% if user.is_superuser or user == event.user %}
-            <div class="text-center m-0 p-0">
+            <div class="text-center">
                 <p class="event-buttons">
-                    <a class="btn btn-outline-primary px-2 py-1" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
-                    <a class="btn btn-outline-danger px-2 py-1" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
+                    <a class="btn btn-outline-primary px-2 py-1" href="{% url 'events:edit-event' event.slug %}"> Edit evnt </a>
+                    <a class="btn btn-outline-danger px-2 py-1" href="{% url 'events:delete-event' event.slug %}"> Delete evnt </a>
                 </p>
             </div>
         {% endif %}
@@ -115,7 +117,7 @@
     <div class="related mt-5">
        <h3> Related Events </h3>
         <div class="events my-5">
-            {% for events in related_events %}
+            {% for events in related_events|slice:6 %}
                 <ul>
                     <li class="text-center"> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
                         <a href="{{  events.get_absolute_url  }}"> {{ events }}</a> <br> </li>

@@ -19,7 +19,7 @@
 
 <div class="container-fluid px-5">
     {% for event in events %}
-        <div class="p-3 m-5 border">
+        <div class="p-3 m-5 w-75 border">
             <div id="posted-by" class="mb-5 card-header border">
                 {% if event.user.image %}
                     <img src="{{ event.user.image.url }}" alt="My Avi">
@@ -27,27 +27,26 @@
                     <img src="/static/images/anon.png" alt="anon">
                 {% endif %}
                 <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
-                <span class="mx-1"> &sdot;&nbsp; {{ event.date_posted|timesince }} ago</span>
+                <span> &sdot; {{ event.date_posted|timesince }} ago </span>
             </div>
 
             {% if event.past_event %}
-                <p class="badge bg-secondary" id="badge"> Past evnt </p> 
+                <p class="badge bg-secondary" id="badge"> Past evnt </p>
             {% endif %}
             
             <div class="mx-5 px-5">
                 {% if event.image %}
-                    <img src="{{ event.image.url }}" alt="" class="mb-5"> 
+                    <div class="text-center"><img src="{{ event.image.url }}" alt=""></div>
                 {% endif %} 
-                <br>
                 <a href="{{ event.get_absolute_url }}"> {{ event }} </a>
-                <p> {{ event.description|truncatewords:20|safe }} </p> 
+                <p> {{ event.description|truncatewords:25|safe }} </p> 
             </div>
             
             {% if event.users_attending.count %}
                 <div class="card-footer border">
                     {% for users in event.users_attending.all %}
                         {% if users.image %}
-                            <a href="{{ users.get_absolute_url }}"><img src="{{ users.image.url }}" alt=""></a>
+                            <a href="{{ users.get_absolute_url }}"> <img src="{{ users.image.url }}" alt="" class="rounded-circle"></a>
                         {% else %}
                             <p> {{ users.username }} </p>
                         {% endif %}

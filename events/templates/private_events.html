@@ -13,27 +13,29 @@
         Only you can view, edit or delete these evnts. 
     </div>
 
-    {% for events in my_events %}
-        <div class="p-3 m-5 border">
-            <div id="posted-by" class="mb-5">
-                <span class="card-header border"> posted 5 mins {{ events.date_posted|timesince }} ago</span>
-            </div>
+    <div>
+        {% for events in my_events %}
+            <div class="p-3 m-5 w-75 border">
+                <div id="posted-by" class="mb-5 card-header border">
+                    <span> You posted &sdot; {{ events.date_posted|timesince }} ago </span>
+                </div>
 
-            {% if events.past_event %}
-                <p class="badge bg-secondary" id="badge"> Past evnt </p> 
-            {% endif %}
-            
-            <div class="events-container mx-5">
-                {% if events.image %}
-                    <img src="{{ events.image.url }}" alt=""> 
-                {% endif %} 
-                <p> <a href="{{ events.get_absolute_url }}"> {{ events }} </a> <br>
-                {{ events.description|truncatewords:30|safe }}  <br>
-            </div>  
-        </div>
-    {% empty %}
-        <p> You don't have any private evnts. </p>
-    {% endfor %}
+                {% if events.past_event %}
+                    <p class="badge bg-secondary" id="badge"> Past evnt </p> 
+                {% endif %}
+                
+                <div class="mx-5 px-3">
+                    {% if events.image %}
+                        <div class="text-center"><img src="{{ events.image.url }}" alt=""></div>
+                    {% endif %} 
+                    <a href="{{ events.get_absolute_url }}"> {{ events }} </a>
+                    <p> {{ events.description|truncatewords:25|safe }} </p> 
+                </div> 
+            </div>
+        {% empty %}
+            <p> You don't have any private evnts. </p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock content %}
 

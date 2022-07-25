@@ -1,4 +1,4 @@
-from django.http import HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +14,7 @@ from .models import CustomUser
 
 
 # Create your views here.
-def get_user(username):
+def get_user(username: str) -> CustomUser:
     user = get_object_or_404(CustomUser, username=username)
     return user
 
@@ -22,14 +22,14 @@ def get_user(username):
 class RegisterUser(View):
 
     form_class = CustomUserCreationForm
-    template_name = "register.html"
+    template_name: str = "register.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponse:
         form = self.form_class()
         context = {"form": form}
         return render(request, self.template_name, context)
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
@@ -46,9 +46,9 @@ class RegisterUser(View):
 
 class UserProfile(View):
 
-    template_name = "user_profile.html"
+    template_name: str = "user_profile.html"
 
-    def get(self, request, username):
+    def get(self, request: HttpRequest, username: str) -> HttpResponse:
         user = get_user(username)
         posted_events = Event.objects.filter(user=user)
         context = {"user": user, "user_events": posted_events}
@@ -58,9 +58,9 @@ class UserProfile(View):
 class UserEditProfile(LoginRequiredMixin, View):
 
     form_class = CustomUserEditForm
-    template_name = "edit_profile.html"
+    template_name: str = "edit_profile.html"
 
-    def get(self, request, username):
+    def get(self, request: HttpRequest, username: str) -> HttpResponse:
         user = get_user(username)
         if request.user == user:
             form = self.form_class(instance=user)
@@ -69,7 +69,7 @@ class UserEditProfile(LoginRequiredMixin, View):
         context = {"form": form}
         return render(request, self.template_name, context)
 
-    def post(self, request, username):
+    def post(self, request: HttpRequest, username: str) -> HttpResponse:
         user = get_user(username)
         if request.user == user:
             form = self.form_class(
@@ -89,9 +89,9 @@ class UserEditProfile(LoginRequiredMixin, View):
 
 class DeleteUserAccount(LoginRequiredMixin, View):
 
-    template_name = "delete_account.html"
+    template_name: str = "delete_account.html"
 
-    def get(self, request, username):
+    def get(self, request: HttpRequest, username: str) -> HttpResponse:
         user = get_user(username)
         if request.user == user:
             context = {"user": user}
@@ -99,7 +99,7 @@ class DeleteUserAccount(LoginRequiredMixin, View):
         else:
             return HttpResponseForbidden()
 
-    def post(self, request, username):
+    def post(self, request: HttpRequest, username: str) -> HttpResponse:
         user = get_user(username)
         if request.user.is_superuser or request.user == user:
             user.delete()
@@ -110,14 +110,14 @@ class DeleteUserAccount(LoginRequiredMixin, View):
 
 class PasswordChange(PasswordChangeView):
 
-    template_name = "password_change.html"
+    template_name: str = "password_change.html"
     success_url = reverse_lazy("accounts:password_change_done")
 
 
 class PasswordChangeDone(PasswordChangeDoneView):
 
-    template_name = "password_change_done.html"
+    template_name: str = "password_change_done.html"
 
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponse:
         messages.success(request, "Your password has been changed successfully.")
         return render(request, self.template_name)

@@ -2,23 +2,65 @@
 
 
 {% block title %}
-<h2> Evnts in your Attend-list </h2>
+<h2> My Attend-list </h2>
 {% endblock %}
 
 
 {% block content %}
-<div class="container-fluid">
-    <div>
-        <p> Evnts in your attend-list are evnts you want to attend. </p>
+<div class="container-flum">
+    <div class="attend-list">
+        <div>
+            <h4> Evnts in your "attend-list" are evnts you want to attend. </h4>
+        </div>
+
+        {% if events %}
+            <div>
+                {% for event in events %}
+                    <div class="p-2 my-5 border">
+                        <div id="posted-by" class="mb-5 card-header border">
+                            {% if event.user.image %}
+                                <img src="{{ event.user.image.url }}" alt="My Avi">
+                            {% else %}
+                                <img src="/static/images/anon.png" alt="anon">
+                            {% endif %}
+                            <span> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> </span> 
+                            <span> &sdot; {{ event.date_posted|timesince }} ago </span>
+                        </div>
+
+                        {% if event.past_event %}
+                            <p class="badge bg-secondary" id="badge"> Past evnt </p>
+                        {% endif %}
+                
+                        <div class="px-5">
+                            {% if event.image %}
+                                <div class="text-center"><img src="{{ event.image.url }}" alt=""></div>
+                            {% endif %} 
+                            <a href="{{ event.get_absolute_url }}"> {{ event }} </a>
+                            <p> {{ event.description|truncatewords:25|safe }} </p> 
+                        </div>
+                
+                        {% if event.users_attending.count %}
+                            <div class="card-footer border">
+                                <span> {{ users }} other{{ users|pluralize }} {{ users|pluralize:"is, are"}} attending this evnt.</span>
+                            </div> 
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
-    {% if events %}
-        {% for event in events %}
-            {{ event }} <br>
+    <div class="other-events p-3">
+        <h5> Evnts with highest attendees </h5>
+        {% for event, event_count in max_attndts.items %}
+            <div class="card-body">
+                <span id="posted-by"> <a href="{{ event.user.get_absolute_url }}"> {{ event.user }} </a> &sdot;{{ event.date_posted|timesince }} ago</span> <br>
+                <a href="{{ event.get_absolute_url }}"> {{ event }} </a> <br> Users attending: {{ event_count }}
+                <hr>
+            </div>
         {% endfor %}
-    {% endif %}
+    </div>
 </div>
-
 {% endblock %}
 
 

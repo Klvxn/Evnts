@@ -1,17 +1,14 @@
-{% extends 'base.html' %}
-
-
-{% block title %}
-<h2> Search results for: <i> "{{ query }}" </i></h2>
-{% endblock %}
-
-
 {% block content %}
-{% for event in search_results %}
-    <div class="events-container">
-        <a href="{{ event.get_absolute_url }}"> {{ event }} </a> {% if event.make_private %} Private {% endif %}
-    </div>
-{% endfor %}
+<div class="p-2">
+    {% for event in search_results %}
+        <div class="p-2">
+            <a href="{{ event.get_absolute_url }}"> {{ event }} </a> {% if event.make_private %} Private {% endif %}
+            <div class="dropdown-divider"></div>
+        </div>
+    {% empty %}
+        <p> No match :( </p>
+    {% endfor %}
+</div>
 {% endblock %}
 
 

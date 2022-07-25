@@ -24,6 +24,10 @@
     <span class="badge bg-danger">Private evnt</span>
 
     <div id="event">
+        <div id="posted-by" class="my-3">
+            <span> You posted <br> &sdot; {{ event.date_posted|timesince }} ago </span>
+        </div>
+
         <div>
             <p> Category: <a href="{{ event.category.get_absolute_url }}"> {{ event.category }} </a> </p>
             {% if tags %}
@@ -51,29 +55,14 @@
         </form> {% endcomment %}
 
         {% if user.is_superuser or user == event.user %}
-            <div class="text-center m-0 p-0">
+            <div class="text-center">
                 <p class="event-buttons">
-                    <a class="btn btn-outline-primary px-2 py-1" href="{% url 'events:edit-event' event.slug %}"> Edit </a>
-                    <a class="btn btn-outline-danger px-2 py-1" href="{% url 'events:delete-event' event.slug %}"> Delete </a>
+                    <a class="btn btn-outline-primary px-2 py-1" href="{% url 'events:edit-event' event.slug %}"> Edit evnt </a>
+                    <a class="btn btn-outline-danger px-2 py-1" href="{% url 'events:delete-event' event.slug %}"> Delete evnt</a>
                 </p>
             </div>
         {% endif %}
     </div>
-
-    {% if related_events %}
-        <hr>
-        <div class="related mt-5">
-           <h3> Related Events </h3>
-            <div class="events mt-2">
-                {% for events in related_events %}
-                    <ul>
-                        <li> {% if events.image %} <img src="{{ events.image.url }}" alt=""> <br> {% endif %}
-                            <a href="{{ events.get_absolute_url }}"> > {{ events }}</a> <br> </li>
-                    </ul>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
 </div>
 {% endblock %}
 

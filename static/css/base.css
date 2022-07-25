@@ -53,7 +53,6 @@ a {
 h2 {
     font-family: sans-serif;
     margin-bottom: 2.5rem;
-    /* display: inline-block; */
 }
 
 
@@ -73,13 +72,17 @@ figcaption {
 
 
 /* Events home page. */
+#posted-by {
+    font-size: .8rem;
+}
+
 #posted-by a {
-    font-size: var(--font-size);
+    font-size: 1.2rem;
 }
 
 #posted-by img {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
 }
 
@@ -98,15 +101,14 @@ figcaption {
 }
 
 .container-fluid img {
-    border-radius: 4%;
+    border-radius: 2%;
     height: 15rem;
-    width: 20rem;
+    width: 30rem;
 }
 
-.container-fluid .card-footer img {
+.card-footer img {
     width: 2rem;
     height: 2rem;
-    border-radius: 50%;
 }
 
 /* Events detail page. */
@@ -245,6 +247,23 @@ form .submit {
 
 .form-control input {
     font-size: var(--font-size);
+}
+
+
+/* Attend list page */
+.attend-list {
+    width: 60%;
+    float: left;
+}
+
+.other-events {
+    margin-left: 47rem;
+    border: 1px solid;
+    width: 35%;
+}
+
+.other-events #posted-by a {
+    font-size: .85rem;
 }
 
 /* Footer */
