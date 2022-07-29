@@ -2,11 +2,14 @@
 A social app where users can post events on their feed and also keep track of public/private events built  with Django.
 
 
-<h1> Setup </h1>
-Requirements
-<a> Python.org </a> Python
-Django 
-``` pip install django ```
+<h2> Setup </h2>
+Requirements <br>
+<a href="https://python.org"> Python </a> <br>
+Django <br>
+
+```
+pip install django
+```
 
 Clone the repository
 ```
@@ -18,18 +21,24 @@ Enter into the directory
 cd Evnts
 ```
 
+Install dependencies
+```
+pip install -r requirements.txt
+```
+
 Run migrations 
 ```
-py manage.py makemigrations
+python manage.py makemigrations
 ```
 
 ```
-py manage.py migrate
+python manage.py migrate
 ```
 
 Start local server 
 ```
-py manage.py runserver
+python manage.py runserver
 ```
 
-Open the app at http://127.0.0.1:8000
+Open the site at 
+http://127.0.0.1:8000
