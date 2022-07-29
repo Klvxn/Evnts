@@ -3,7 +3,7 @@ A social app where users can post public/private events on their feed and also k
 
 
 <h2> Setup </h2>
-Requirements <br>
+<h4> Requirements </h4>
 <a href="https://python.org"> Python </a> <br>
 Django <br>
 
