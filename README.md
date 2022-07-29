@@ -1,5 +1,5 @@
 # Evnts
-A social app where users can post events on their feed and also keep track of public/private events built  with Django.
+A social app where users can post public/private events on their feed and also keep track of other user's events.
 
 
 <h2> Setup </h2>
