@@ -7,26 +7,27 @@ Requirements <br>
 <a href="https://python.org"> Python </a> <br>
 Django <br>
 
-```
-pip install django
-```
 
-Clone the repository
+<h4> Clone the repository </h4>
+
 ```
 git clone https://github.com/Kelvxn/Evnts.git
 ```
 
-Enter into the directory
+<h4> Enter into the directory </h4>
+
 ```
 cd Evnts
 ```
 
-Install dependencies
+<h4> Install dependencies </h4>
+
 ```
 pip install -r requirements.txt
 ```
 
-Run migrations 
+<h4> Run migrations </h4>
+
 ```
 python manage.py makemigrations
 ```
@@ -35,10 +36,11 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-Start local server 
+<h4> Start local server </h4> 
+
 ```
 python manage.py runserver
 ```
 
-Open the site at 
+<h4> Open the site at </h4>
 http://127.0.0.1:8000
