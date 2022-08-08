@@ -56,9 +56,10 @@ class CategoryDetailView(View):
     def get(self, request: HttpRequest, slug: str) -> HttpResponse:
         category = Category.objects.get(slug=slug)
         if request.user.is_authenticated:
-            queryset = category.events(manager="public").all() | category.events(
-                manager="private"
-            ).filter(user=request.user)
+            queryset = (
+                category.events(manager="public").all() |
+                category.events(manager="private").filter(user=request.user)
+            )
         else:
             queryset = category.events(manager="public").all()
         context = {"queryset": queryset, "category": category}
@@ -89,6 +90,8 @@ class EventDetailView(View):
         ).distinct()
         form = self.form_class()
         comments = event.comments.all()
+        for comment in comments:
+            print(comment.replies.all())
         context = {
             "event": event,
             "tags": tags,
@@ -105,17 +108,17 @@ class EventDetailView(View):
         if event_action == "Add to attend-list":
             event.users_attending.add(request.user)
             return HttpResponse("This evnt has been added to your evnt list.")
-        elif event_action == "Remove from attend-list":
+        if event_action == "Remove from attend-list":
             event.users_attending.remove(request.user)
             return HttpResponse("This evnt has been removed from your attend-list")
-        else:
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.event = get_event(slug)
-                comment.username = request.user
-                comment.save()
-                return redirect(event.get_absolute_url())
+
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.event = get_event(slug)
+            comment.username = request.user
+            comment.save()
+            return redirect(event.get_absolute_url())
 
 
 class EventTagView(View):
@@ -182,8 +185,7 @@ class AddEventView(LoginRequiredMixin, View):
             form.save_m2m()
             messages.success(request, "Evnt posted successfully.")
             return redirect(event)
-        else:
-            messages.error(request, "Your evnt was not posted. Try again.")
+        messages.error(request, "Your evnt was not posted. Try again.")
         context = {"form": form}
         return render(request, self.template_name, context)
 
@@ -215,8 +217,7 @@ class EditEventView(LoginRequiredMixin, View):
                 form.save_m2m()
                 messages.success(request, "Changes saved!")
                 return redirect(event.get_absolute_url())
-            else:
-                messages.error(request, "Error while updating evnt.")
+            messages.error(request, "Error while updating evnt.")
         else:
             return HttpResponseForbidden()
         context = {"form": form, "event": event}
@@ -232,16 +233,14 @@ class DeleteEventView(LoginRequiredMixin, View):
         if request.user.is_superuser or request.user == event.user:
             context = {"event": event}
             return render(request, self.template_name, context)
-        else:
-            return HttpResponseForbidden()
+        return HttpResponseForbidden()
 
     def post(self, request: HttpRequest, slug) -> HttpResponse:
         event = get_object_or_404(Event, slug=slug)
         if request.user.is_superuser or request.user == event.user:
             event.delete()
             return redirect("events:home")
-        else:
-            return HttpResponseForbidden()
+        return HttpResponseForbidden()
 
 
 class SearchEventView(View):
@@ -249,10 +248,10 @@ class SearchEventView(View):
     template_name: str = "search_events.html"
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        print(request.GET)
         query = request.GET.get("search")
+        search_results = None
         if not query:
-            return HttpResponse("The entry you made is invalid :( ")
+            pass
         else:
             if request.user.is_authenticated:
                 search_results = (

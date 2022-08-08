@@ -1,0 +1,8 @@
+
+{% block content %}
+{% for event in search_results %}
+    <div class="events-container">
+        <a href="{{ event.get_absolute_url }}"> {{ event }} </a> {% if event.make_private %} Private {% endif %}
+    </div>
+{% endfor %}
+{% endblock %}

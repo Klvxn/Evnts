@@ -60,15 +60,15 @@
 
         <p class="note badge bg-success"></p>
         <div class="text-center p-5" style="margin: 0 auto;">
-                <form action="" method="post" hx-post="." hx-target=".note" hx-swap="OuterHTML">
-                    {% csrf_token %}
-                    {% if request.user in event.users_attending.all %}
-                        <p class="badge bg-warning">This evnt is already in your attend-list.</p><br>
-                        <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Remove from attend-list">
-                    {% else %}
-                        <input type="submit" name="{{ event.id }}" class="btn btn-primary" value="Add to attend-list">
-                    {% endif %}
-                </form>
+            <form action="" method="post" hx-post="." hx-target=".note" hx-swap="OuterHTML">
+                {% csrf_token %}
+                {% if request.user in event.users_attending.all %}
+                    <p class="badge bg-warning">This evnt is already in your attend-list.</p><br>
+                    <input type="submit" name="{{ event.id }}" class="btn btn-outline-primary" value="Remove from attend-list">
+                {% else %}
+                    <input type="submit" name="{{ event.id }}" class="btn btn-primary" value="Add to attend-list">
+                {% endif %}
+            </form>
            
             
         </div> 
@@ -91,8 +91,10 @@
                 <p class="comments p-1">
                     <span style="font-weight:bold;"> {{ comment.username }}: </span> <br>
                     <span> {{ comment.comment }} <br> <i>  {{ comment.date_added|timesince }} ago </i> </span>
+                    
+                    <a href="." hx-get="." hx-target="outerHTML">reply</a>
                     {% for reply in comments %}
-                        {{ reply }}
+                        {{ reply.replies.all }}
                     {% endfor %}
                 </p>
             {% endfor %} 

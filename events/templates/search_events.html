@@ -1,14 +1,28 @@
-{% block content %}
-<div class="p-2">
-    {% for event in search_results %}
-        <div class="p-2">
-            <a href="{{ event.get_absolute_url }}"> {{ event }} </a> {% if event.make_private %} Private {% endif %}
-            <div class="dropdown-divider"></div>
-        </div>
-    {% empty %}
-        <p> No match :( </p>
-    {% endfor %}
+{% extends 'base.html' %}
+
+
+{% block title %}
+<h2> Search results for: <i> "{{ query }}" </i></h2>
+{% endblock %}
+
+
+{% block search %}
+<div class="py-4" id="searchbar">
+    <form action="." method="get" hx-get="." hx-target=".error">
+        <input name="search" placeholder="Search for evnts." type="search" class="form-control m-1" aria-label="Search">
+    </form>
+    <p class="error text-center card">
+    {% comment %} {% include 'partials/search_results.html' %} </p> {% endcomment %}
 </div>
+{% endblock %}
+
+
+{% block content %}
+{% for event in search_results %}
+    <div class="events-container">
+        <a href="{{ event.get_absolute_url }}"> {{ event }} </a> &sdot; <span id="posted-by"> {{ event.date_posted.date|timesince }} ago</span> {% if event.make_private %} Private {% endif %}
+    </div>
+{% endfor %}
 {% endblock %}
 
 

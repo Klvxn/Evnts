@@ -12,18 +12,19 @@ from taggit.managers import TaggableManager
 # Create your models here.
 class Category(models.Model):
 
-    CATEGORY_CHOICES = [
-        ("Wedding", "Wedding"),
-        ("Concert", "Concert"),
-        ("Party", "Party"),
-        ("Conference", "Conference"),
-        ("Festival", "Festival"),
-        ("Exhibition", "Exhibition"),
-        ("Meeting", "Meeting"),
-        ("Sport Event", "Sport Event"),
-        ("Others", "Others"),
-    ]
-    name = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    class CategoryChoices(models.TextChoices):
+
+        WEDDING = "Wedding"
+        CONCERT = "Concert"
+        PARTY = "Party"
+        CONFERENCE =  "Conference"
+        FESTIVAL = "Festival"
+        EXHIBITION = "Exhibition"
+        MEETING = "Meeting"
+        SPORT = "Sport Event"
+        OTHERS = "Others"
+    
+    name = models.CharField(max_length=20, choices=CategoryChoices.choices)
     description = models.TextField(null=True)
     slug = models.SlugField(max_length=20, null=True)
 
