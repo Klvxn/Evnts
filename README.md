@@ -1,4 +1,6 @@
 # Evnts
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A social app where users can post public/private events on their feed and also keep track of other user's events.
 
 
